@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('clientes.urls')),
     path('', include('homepage.urls')),  # Inclua as URLs da app "homepage"
+    path('dominios/', include('dominios.urls')),  # Incluindo as URLs da app dominios
     ]

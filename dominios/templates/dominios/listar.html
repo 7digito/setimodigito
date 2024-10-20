@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Lista de Domínios</h1>
+<ul>
+    {% for dominio in dominios %}
+        <li>{{ dominio.nome }}.{{ dominio.extensao }} - Estado: {{ dominio.estado }}</li>
+    {% empty %}
+        <li>Nenhum domínio encontrado.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

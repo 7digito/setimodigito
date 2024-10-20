@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Adicionar Domínio</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Adicionar</button>
+    <a href="{% url 'listar_dominios' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
