@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Apagar Cliente{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Apagar Cliente</h2>
+    <p>Tem a certeza que deseja apagar o cliente "{{ cliente.nome }}"?</p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Sim, Apagar</button>
+        <a href="{% url 'listar_clientes' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

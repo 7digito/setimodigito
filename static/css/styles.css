@@ -1,0 +1,4 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    padding-bottom: 100px; /* Evita que o conteúdo fique atrás do footer */
+}

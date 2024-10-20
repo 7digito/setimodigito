@@ -1,0 +1,32 @@
+{% load static %}
+<!-- Barra Principal -->
+<nav class="navbar navbar-expand-lg bg-secondary"> 
+    <div class="container-fluid">
+        <!-- Logo à esquerda -->
+        <a class="navbar-brand px-3" href="#">
+            <img src="{% static 'img/logo.png' %}" alt="Logo" height="40">
+        </a>
+
+        <!-- Botão para mobile -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Menu à direita -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto"> <!-- ms-auto alinha o menu à direita -->
+                <li class="nav-item">
+                    <a class="nav-link text-white px-3"  href="{% url 'listar_clientes' %}">Clientes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white px-3" href="#">Domínios</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white px-3" href="#">Recursos</a>
+                </li>
+
+                <!-- Adicione mais links aqui -->
+            </ul>
+        </div>
+    </div>
+</nav>

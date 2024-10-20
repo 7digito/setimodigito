@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Setimo Digito{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Teu CSS customizado -->
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">  
+
+    <!-- Font Awesome-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <!-- Google Fonts-->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+ 
+</head>
+<body>
+    {% include 'includes/navbar.html' %}
+    
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Incluir o footer -->
+    {% now "Y" as current_year %}
+    {% include 'includes/footer.html' with current_year=current_year %}
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
