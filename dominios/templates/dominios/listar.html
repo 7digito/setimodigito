@@ -1,17 +1,16 @@
 {% extends 'base.html' %}
 
 {% load static %}
+{% block title %}Lista de Domínios{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
-
-<h2>Lista de Domínios</h2>
-
+<h1 class="mt-4">Lista de Domínios</h1>
 <table class="table table-striped">
     <thead>
         <tr>
             <th>Nome</th>
             <th>Extensão</th>
+            <th>Cliente</th> <!-- Exibir o cliente associado -->
             <th>Estado</th>
             <th>Data de Criação</th>
             <th>Data de Expiração</th>
@@ -23,17 +22,20 @@
         <tr>
             <td>{{ dominio.nome }}</td>
             <td>{{ dominio.extensao }}</td>
-            <td>{{ dominio.get_estado_display }}</td>
-            <td>{{ dominio.data_criacao }}</td>
-            <td>{{ dominio.data_expiracao }}</td>
+            <td>{{ dominio.cliente.nome }}</td> <!-- Exibir o nome do cliente -->
+            <td>{{ dominio.get_estado_display }}</td> <!-- Exibir o estado legível -->
+            <td>{{ dominio.data_criacao|date:"d/m/Y" }}</td> <!-- Data de criação formatada -->
+            <td>{{ dominio.data_expiracao|date:"d/m/Y" }}</td> <!-- Data de expiração formatada -->
             <td>
-                <a href="{% url 'editar_dominio' dominio.id %}" class="btn btn-primary">Editar</a>
-                <a href="{% url 'excluir_dominio' dominio.id %}" class="btn btn-danger">Excluir</a>
+                <a href="{% url 'editar_dominio' dominio.id %}" class="btn btn-sm btn-warning">Editar</a>
+                <a href="{% url 'excluir_dominio' dominio.id %}" class="btn btn-sm btn-danger">Eliminar</a>
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 
-<a href="{% url 'adicionar_dominio' %}" class="btn btn-success">Adicionar Novo Domínio</a>
+<a href="{% url 'adicionar_dominio' %}" class="btn btn-primary">Adicionar Domínio</a>
+
+
 {% endblock %}

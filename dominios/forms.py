@@ -4,4 +4,5 @@ from .models import Dominio
 class DominioForm(forms.ModelForm):
     class Meta:
         model = Dominio
-        fields = ['nome', 'extensao', 'estado', 'data_expiracao']  # Remova 'data_criacao'
+        # Remover 'data_criacao' do formulário, já que ele é não-editável
+        fields = ['nome', 'extensao', 'estado', 'data_expiracao', 'cliente']

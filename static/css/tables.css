@@ -43,3 +43,44 @@ td {
 .btn {
     margin-right: 5px;
 }
+
+body {
+    background-color: #ffffff; /* Cor de fundo suave */
+    font-family: 'Arial', sans-serif; /* Tipo de letra ousado */
+}
+
+h1 {
+    font-weight: bold; /* Letra ousada */
+    margin-bottom: 20px; /* Margem inferior */
+}
+
+.divider {
+    height: 2px;
+    background-color: #034d63; /* Cor do divisor */
+    margin: 20px 0; /* Margens superior e inferior */
+}
+
+.table {
+    margin-top: 20px; /* Margem superior para a tabela */
+    border: 1px solid #dee2e6; /* Borda da tabela */
+}
+
+.table th, .table td {
+    vertical-align: middle; /* Centralizar verticalmente */
+}
+
+.table th {
+    background-color: #034d63; /* Cor de fundo do cabeçalho */
+    font-weight: bold; /* Letra ousada no cabeçalho */
+}
+
+.btn {
+    margin: 0 5px; /* Margem entre os botões */
+}
+.form-group {
+    margin-bottom: 15px; /* Espaçamento inferior entre os campos */
+}
+
+.btn {
+    margin-top: 10px; /* Margem superior para os botões */
+}

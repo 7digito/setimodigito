@@ -26,3 +26,7 @@ button {
 button:hover {
     background-color: #45a049;
 }
+
+.form-group {
+    margin-bottom: 1.5rem; /* Ajuste a margem inferior conforme necessário */
+}
