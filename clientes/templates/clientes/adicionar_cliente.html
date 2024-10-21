@@ -3,45 +3,45 @@
 {% block title %}Adicionar Cliente{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container mt-5" style="max-width: 50%; margin: 0 auto;">
     <h2 class="text-center mb-4">Adicionar Cliente</h2>
 
-       <form method="post">
+    <form method="post">
         {% csrf_token %}
         <div class="row">
             <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="nome" class="form-label">Nome</label>
+                <div class="mb-4">
+                    <label for="nome" class="form-label" style="font-size: 1.2rem; font-weight: bold; text-align: left;">Nome</label>
                     <input type="text" class="form-control" id="nome" name="nome" required>
                 </div>
-                <div class="mb-3">
-                    <label for="nif" class="form-label">Número de Identificação Fiscal</label>
+                <div class="mb-4">
+                    <label for="nif" class="form-label" style="font-size: 1.2rem; font-weight: bold; text-align: left;">Número de Identificação Fiscal</label>
                     <input type="text" class="form-control" id="nif" name="nif">
                 </div>
-                <div class="mb-3">
-                    <label for="morada" class="form-label">Morada</label>
+                <div class="mb-4">
+                    <label for="morada" class="form-label" style="font-size: 1.2rem; font-weight: bold; text-align: left;">Morada</label>
                     <input type="text" class="form-control" id="morada" name="morada">
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="codigo_postal" class="form-label">Código Postal</label>
+                <div class="mb-4">
+                    <label for="codigo_postal" class="form-label" style="font-size: 1.2rem; font-weight: bold; text-align: left;">Código Postal</label>
                     <input type="text" class="form-control" id="codigo_postal" name="codigo_postal">
                 </div>
-                <div class="mb-3">
-                    <label for="localidade" class="form-label">Localidade</label>
+                <div class="mb-4">
+                    <label for="localidade" class="form-label" style="font-size: 1.2rem; font-weight: bold; text-align: left;">Localidade</label>
                     <input type="text" class="form-control" id="localidade" name="localidade">
                 </div>
-                <div class="mb-3">
-                    <label for="telefone" class="form-label">Telefone</label>
+                <div class="mb-4">
+                    <label for="telefone" class="form-label" style="font-size: 1.2rem; font-weight: bold; text-align: left;">Telefone</label>
                     <input type="text" class="form-control" id="telefone" name="telefone">
                 </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
+                <div class="mb-4">
+                    <label for="email" class="form-label" style="font-size: 1.2rem; font-weight: bold; text-align: left;">Email</label>
                     <input type="email" class="form-control" id="email" name="email">
                 </div>
-                <div class="mb-3">
-                    <label for="website" class="form-label">Website</label>
+                <div class="mb-4">
+                    <label for="website" class="form-label" style="font-size: 1.2rem; font-weight: bold; text-align: left;">Website</label>
                     <input type="url" class="form-control" id="website" name="website">
                 </div>
             </div>
