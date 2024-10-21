@@ -20,7 +20,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for cliente in clientes %}
+        {% for cliente in page_obj %}
         <tr>
             <td>{{ cliente.nome }}</td>
             <td>{{ cliente.morada }}</td>
@@ -31,9 +31,32 @@
                 <a href="{% url 'apagar_cliente' cliente.id %}" class="btn btn-sm btn-danger">Eliminar</a>
             </td>
         </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">Nenhum cliente encontrado.</td>
+        </tr>
         {% endfor %}
     </tbody>
 </table>
+
+<!-- Navegação da paginação -->
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; Primeira</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+        {% endif %}
+
+        <span class="current">
+            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Próxima</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+        {% endif %}
+    </span>
+</div>
 
 <a href="{% url 'adicionar_cliente' %}" class="btn btn-success">Adicionar Cliente</a>
 {% endblock %}

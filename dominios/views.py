@@ -6,6 +6,7 @@ from .forms import DominioForm #Form para os dominios
 def listar_dominios(request):
     dominios = Dominio.objects.all()  # Obtendo todos os domínios
     return render(request, 'dominios/listar.html', {'dominios': dominios})
+
 def adicionar_dominio(request):
     if request.method == 'POST':
         form = DominioForm(request.POST)
@@ -17,8 +18,8 @@ def adicionar_dominio(request):
     return render(request, 'dominios/adicionar.html', {'form': form})
 
 # Editar Domínio
-def editar_dominio(request, dominio_id):
-    dominio = get_object_or_404(Dominio, id=dominio_id)
+def editar_dominio(request, id):
+    dominio = get_object_or_404(Dominio, pk=id)  # Aqui está o id
     if request.method == 'POST':
         form = DominioForm(request.POST, instance=dominio)
         if form.is_valid():
@@ -27,6 +28,7 @@ def editar_dominio(request, dominio_id):
     else:
         form = DominioForm(instance=dominio)
     return render(request, 'dominios/editar.html', {'form': form, 'dominio': dominio})
+
 
 # Excluir Domínio
 def excluir_dominio(request, dominio_id):

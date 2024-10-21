@@ -4,6 +4,9 @@
 {% block title %}Lista de Domínios{% endblock %}
 
 {% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">>
+
 <h1 class="mt-4">Lista de Domínios</h1>
 <table class="table table-striped">
     <thead>
@@ -27,7 +30,7 @@
             <td>{{ dominio.data_criacao|date:"d/m/Y" }}</td> <!-- Data de criação formatada -->
             <td>{{ dominio.data_expiracao|date:"d/m/Y" }}</td> <!-- Data de expiração formatada -->
             <td>
-                <a href="{% url 'editar_dominio' dominio.id %}" class="btn btn-sm btn-warning">Editar</a>
+                <a href="{% url 'editar_dominio' dominio.id %}" class="btn btn-sm btn-primary">Editar</a>
                 <a href="{% url 'excluir_dominio' dominio.id %}" class="btn btn-sm btn-danger">Eliminar</a>
             </td>
         </tr>
@@ -35,7 +38,7 @@
     </tbody>
 </table>
 
-<a href="{% url 'adicionar_dominio' %}" class="btn btn-primary">Adicionar Domínio</a>
+<a href="{% url 'adicionar_dominio' %}" class="btn btn-success">Adicionar Domínio</a>
 
 
 {% endblock %}
