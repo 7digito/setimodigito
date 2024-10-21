@@ -1,5 +1,13 @@
-<footer class="footer bg-secondary fixed-bottom" style="border-top: 1px solid black; padding-top: 15px; font-family: 'Dosis', sans-serif;"">
-    <div class="container text-center text-white">
-        <p>&copy; {{ current_year }} Setimo Digito. Todos os direitos reservados.</p>
+{% load static %}
+
+<footer class="footer fixed-bottom" 
+        style="background-color: #ffb74d; border-top: 1px solid #ccc; padding-top: 10px; padding-bottom: 10px; font-family: 'Poppins', sans-serif;">
+    <div class="container d-flex justify-content-center align-items-center text-white">
+        <!-- Logo alinhado à esquerda -->
+        <a href="{% url 'homepage' %}" class="me-2"> <!-- Classe 'me-2' adiciona margem à direita -->
+            <img src="{% static 'img/logo.png' %}" alt="Logo" height="40">
+        </a>
+        <!-- Texto ao lado do logo -->
+        <p class="mb-0">&copy; {{ current_year }} Todos os direitos reservados.</p>
     </div>
 </footer>

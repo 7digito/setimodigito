@@ -1,24 +1,35 @@
 {% load static %}
+{% load tz %} <!-- Se você estiver usando fuso horário -->
+{% now "d/m/Y" as today %}
+
+<!-- Link para Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
 <!-- Top Bar -->
-<div class="topbar bg-light py-1" style="font-family: 'Dosis', sans-serif;">
+<div class="topbar py-1" style="font-family: 'Poppins', sans-serif; padding-top: 25px !important; padding-bottom: 10px !important; background-color: #ffb74d;">
     <div class="container-fluid d-flex justify-content-end">
+        <div class="date text-dark px-2">{{ today }}</div> <!-- Removi 'date-position' se não houver estilo definido -->
         <!-- Menu do usuário à direita -->
         <div class="user-menu">
-            <a href="{% url 'admin:index' %}" class="text-dark px-2" title="Admin"><i class="bi bi-house-door"></i> Admin</a>
-            <a href="#" class="text-dark px-2" title="Perfil"><i class="bi bi-person-circle"></i> Perfil</a> <!-- Ícone de perfil -->
-            <a href="#" class="text-dark px-2" title="Sair"><i class="bi bi-box-arrow-right"></i> Sair</a> <!-- Ícone de sair -->
+            <a href="{% url 'admin:index' %}" class="text-dark px-2" title="Admin">
+                <i class="bi bi-house-door"></i> Admin
+            </a>
+            <a href="#" class="text-dark px-2" title="Perfil">
+                <i class="bi bi-person-circle"></i> Perfil
+            </a>
+            <a href="#" class="text-dark px-2" title="Sair">
+                <i class="bi bi-box-arrow-right"></i> Sair
+            </a>
         </div>
     </div>
 </div>
 
-
 <!-- Barra Principal -->
-<nav class="navbar navbar-expand-lg bg-secondary"> 
+<nav class="navbar navbar-expand-lg bg-secondary">
     <div class="container-fluid">
         <!-- Logo à esquerda -->
         <a class="navbar-brand px-3" href="{% url 'homepage' %}">
-            <img src="{% static 'img/logo.png' %}" alt="Logo" height="40">
+            <img src="{% static 'img/logo_head.png' %}" alt="Logo" height="50">
         </a>
 
         <!-- Botão para mobile -->
@@ -28,18 +39,30 @@
 
         <!-- Menu à direita -->
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto"> <!-- ms-auto alinha o menu à direita -->
-                <li class="nav-item">
-                    <a class="nav-link text-white px-3"  href="{% url 'listar_clientes' %}">Clientes</a>
+            <ul class="navbar-nav ms-auto" style="font-family: 'Poppins', sans-serif; font-weight: 600;">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white px-3" href="#" id="clientesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-people"></i> Clientes
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="clientesDropdown">
+                        <li><a class="dropdown-item" href="{% url 'listar_clientes' %}">Listar Clientes</a></li>
+                        <li><a class="dropdown-item" href="{% url 'adicionar_cliente' %}">Adicionar Cliente</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white px-3" href="#" id="dominiosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-globe"></i> Domínios
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dominiosDropdown">
+                        <li><a class="dropdown-item" href="{% url 'listar_dominios' %}">Listar Domínios</a></li>
+                        <li><a class="dropdown-item" href="{% url 'adicionar_dominio' %}">Adicionar Domínio</a></li>
+                    </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white px-3" href="{% url 'listar_dominios' %}">Domínios</a>
+                    <a class="nav-link text-white px-3" href="#">
+                        <i class="bi bi-box-seam"></i> Recursos
+                    </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white px-3" href="#">Recursos</a>
-                </li>
-
-                <!-- Adicione mais links aqui -->
             </ul>
         </div>
     </div>
