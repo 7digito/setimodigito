@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
+
 <h2>Adicionar Domínio</h2>
 
 <form method="POST">

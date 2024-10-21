@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block content %}
-<h2>Editar Domínio: {{ dominio.nome }}</h2>
+<link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
+
+<h2>Editar Domínio</h2>
 
 <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+    <button type="submit" class="btn btn-success">Salvar Alterações</button>
     <a href="{% url 'listar_dominios' %}" class="btn btn-secondary">Cancelar</a>
 </form>
 {% endblock %}

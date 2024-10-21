@@ -1,12 +1,39 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+
+{% load static %}
 
 {% block content %}
-<h1>Lista de Domínios</h1>
-<ul>
-    {% for dominio in dominios %}
-        <li>{{ dominio.nome }}.{{ dominio.extensao }} - Estado: {{ dominio.estado }}</li>
-    {% empty %}
-        <li>Nenhum domínio encontrado.</li>
-    {% endfor %}
-</ul>
+<link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
+
+<h2>Lista de Domínios</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Extensão</th>
+            <th>Estado</th>
+            <th>Data de Criação</th>
+            <th>Data de Expiração</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for dominio in dominios %}
+        <tr>
+            <td>{{ dominio.nome }}</td>
+            <td>{{ dominio.extensao }}</td>
+            <td>{{ dominio.get_estado_display }}</td>
+            <td>{{ dominio.data_criacao }}</td>
+            <td>{{ dominio.data_expiracao }}</td>
+            <td>
+                <a href="{% url 'editar_dominio' dominio.id %}" class="btn btn-primary">Editar</a>
+                <a href="{% url 'excluir_dominio' dominio.id %}" class="btn btn-danger">Excluir</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'adicionar_dominio' %}" class="btn btn-success">Adicionar Novo Domínio</a>
 {% endblock %}

@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %}Lista de Clientes{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
+
 <h1 class="mt-4">Lista de Clientes</h1>
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -22,12 +27,13 @@
             <td>{{ cliente.nif }}</td>
             <td>{{ cliente.telefone }}</td>
             <td>
-                <a href="{% url 'editar_cliente' cliente.id %}" class="btn btn-sm btn-warning">Editar</a>
+                <a href="{% url 'editar_cliente' cliente.id %}" class="btn btn-sm btn-primary">Editar</a>
                 <a href="{% url 'apagar_cliente' cliente.id %}" class="btn btn-sm btn-danger">Eliminar</a>
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-<a href="{% url 'adicionar_cliente' %}" class="btn btn-primary">Adicionar Cliente</a>
+
+<a href="{% url 'adicionar_cliente' %}" class="btn btn-success">Adicionar Cliente</a>
 {% endblock %}
