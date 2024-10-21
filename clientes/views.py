@@ -6,14 +6,16 @@ def listar_clientes(request):
     clientes = Cliente.objects.all()
     return render(request, 'clientes/listar_clientes.html', {'clientes': clientes})
 
+
 def adicionar_cliente(request):
     if request.method == 'POST':
         form = ClienteForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('listar_clientes')
+            form.save()  # Isso salvará o cliente no banco de dados
+            return redirect('listar_clientes')  # Redireciona após salvar
     else:
-        form = ClienteForm()
+        form = ClienteForm()  # Formulário vazio para GET
+
     return render(request, 'clientes/adicionar_cliente.html', {'form': form})
 
 # View para editar um cliente
