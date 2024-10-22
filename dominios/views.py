@@ -4,7 +4,7 @@ from .forms import DominioForm  # Form para os domínios
 
 # Lista de Domínios
 def listar_dominios(request):
-    dominios = Dominio.objects.all()  # Obtendo todos os domínios
+    dominios = Dominio.objects.all().order_by('nome')  # Obtendo todos os domínios
     return render(request, 'dominios/listar.html', {'dominios': dominios})
 
 def adicionar_dominio(request):
