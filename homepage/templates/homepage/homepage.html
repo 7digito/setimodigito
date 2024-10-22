@@ -3,29 +3,58 @@
 {% block title %}Homepage{% endblock %}
 
 {% block content %}
-<div style="display: flex; padding-top: 20px;">
+<div style="display: flex; padding: 40px 20px;">
 
-    <div style="flex: 2; padding-right: 20px;">
+    <div style="flex: 2; padding-right: 20px; border-right: 1px solid #ccc;">
         <h1>Bem-vindo à Homepage!</h1>
         <p>Esta é a página inicial do seu projeto Django.</p>
     </div>
 
-    <div style="flex: 1;">
-        <h2 style="font-size: 1.5rem;">Domínios a Expirar</h2> <!-- Ajuste o tamanho da fonte aqui -->
+    <div style="flex: 1; padding-left: 20px;">
+        <h2 style="font-size: 1.5rem;">Domínios a Expirar</h2>
         <table style="width: 100%; border-collapse: collapse;">
             <thead>
                 <tr>
-                    <th style="padding: 8px; font-size: 0.9rem;">Nome</th> <!-- Tamanho da fonte da coluna -->
-                    <th style="padding: 8px; font-size: 0.9rem;">Extensão</th> <!-- Tamanho da fonte da coluna -->
-                    <th style="padding: 8px; font-size: 0.9rem;">Data de Expiração</th> <!-- Tamanho da fonte da coluna -->
+                    <th style="padding: 8px; font-size: 0.9rem;">Nome</th>
+                    <th style="padding: 8px; font-size: 0.9rem;">Extensão</th>
+                    <th style="padding: 8px; font-size: 0.9rem;">Data de Expiração</th>
                 </tr>
             </thead>
             <tbody>
                 {% for dominio in proximos_dominios %}
                 <tr>
-                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ dominio.nome }}</td> <!-- Tamanho da fonte da célula -->
-                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ dominio.extensao }}</td> <!-- Tamanho da fonte da célula -->
-                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ dominio.data_expiracao|date:"d/m/Y" }}</td> <!-- Tamanho da fonte da célula -->
+                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ dominio.nome }}</td>
+                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ dominio.extensao }}</td>
+                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ dominio.data_expiracao|date:"d/m/Y" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <hr style="border: 1px solid #ccc; margin: 20px 0;">
+
+        <h2 style="font-size: 1.5rem;">Últimas Tarefas</h2>
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="padding: 8px; font-size: 0.9rem;">Descrição</th>
+                    <th style="padding: 8px; font-size: 0.9rem;">Estado</th>
+                    <th style="padding: 8px; font-size: 0.9rem;">Prioridade</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tarefa in ultimas_tarefas %}
+                <tr>
+                    <td 
+                        style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;"
+                        data-tooltip="{{ tarefa.cliente.nome }}"  <!-- Armazena o nome do cliente no atributo data-tooltip -->
+                    >{{ tarefa.descricao }}</td>
+                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ tarefa.get_estado_display }}</td>
+                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ tarefa.get_prioridade_display }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" style="text-align: center; padding: 8px; font-size: 0.9rem;">Nenhuma tarefa encontrada.</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -33,4 +62,33 @@
     </div>
 
 </div>
+
+<!-- Estilo do Tooltip -->
+<style>
+    [data-tooltip] {
+        position: relative;
+        cursor: pointer; /* Muda o cursor para indicar que é interativo */
+    }
+
+    [data-tooltip]:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        left: 50%;
+        bottom: 100%; /* Posiciona o tooltip acima do elemento */
+        transform: translateX(-50%);
+        background: #333; /* Cor de fundo do tooltip */
+        color: #fff; /* Cor do texto do tooltip */
+        padding: 5px 10px;
+        border-radius: 4px;
+        white-space: nowrap; /* Evita que o texto quebre */
+        z-index: 1000;
+        opacity: 0.9; /* Transparência */
+        transition: opacity 0.2s; /* Animação ao aparecer */
+    }
+
+    [data-tooltip]:hover::after {
+        visibility: visible; /* Torna o tooltip visível */
+    }
+</style>
+
 {% endblock %}

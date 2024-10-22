@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Lista de Tarefas{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">Lista de Tarefas</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Cliente</th>
+            <th>Descrição</th>
+            <th>Estado</th>
+            <th>Prioridade</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tarefa in tarefas %}
+        <tr>
+            <td style="padding-top: 10px; vertical-align: middle;">{{ tarefa.cliente.nome }}</td>
+            <td style="padding-top: 10px; vertical-align: middle;">{{ tarefa.descricao }}</td>
+            <td style="padding-top: 10px; vertical-align: middle;">{{ tarefa.get_estado_display }}</td>
+            <td style="padding-top: 10px; vertical-align: middle;">{{ tarefa.get_prioridade_display }}</td>
+            <td style="padding-top: 10px; vertical-align: middle;">
+                <a href="{% url 'editar_tarefa' tarefa.id %}" class="btn btn-sm btn-primary">Editar</a>
+                <a href="{% url 'apagar_tarefa' tarefa.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">Nenhuma tarefa encontrada.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Navegação da paginação, se estiver implementada -->
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; Primeira</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+        {% endif %}
+
+        <span class="current">
+            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Próxima</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+<a href="{% url 'adicionar_tarefa' %}" class="btn btn-success">Adicionar Tarefa</a>
+{% endblock %}

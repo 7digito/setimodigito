@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Adicionar Tarefa{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">Adicionar Tarefa</h1>
+
+<form method="post" class="form">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="id_cliente" class="form-label">Cliente</label>
+        {{ form.cliente }}
+    </div>
+    <div class="mb-3">
+        <label for="id_descricao" class="form-label">Descrição</label>
+        {{ form.descricao }}
+    </div>
+    <div class="mb-3">
+        <label for="id_estado" class="form-label">Estado</label>
+        {{ form.estado }}
+    </div>
+    <div class="mb-3">
+        <label for="id_prioridade" class="form-label">Prioridade</label>
+        {{ form.prioridade }}
+    </div>
+
+    <button type="submit" class="btn btn-success">Salvar Tarefa</button>
+    <a href="{% url 'listar_tarefas' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
