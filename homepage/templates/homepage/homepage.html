@@ -3,13 +3,56 @@
 {% block title %}Homepage{% endblock %}
 
 {% block content %}
-<div style="display: flex; padding: 40px 20px;">
+<div style="display: flex; padding: 20px 20px;">
 
+    <!-- Lado esquerdo: 2/3 do ecrã -->
     <div style="flex: 2; padding-right: 20px; border-right: 1px solid #ccc;">
-        <h1>Bem-vindo à Homepage!</h1>
-        <p>Esta é a página inicial do seu projeto Django.</p>
+        <h1 style="font-family: 'Play', sans-serif; font-weight: 700; color: #FF6600; font-size: 3rem ;">SÉTIMO DIGITO</h1>
+        <p style="font-family: 'Play', sans-serif; font-size: 1.2em;">WEB AND DIGITAL SOLUTIONS</p>
+        
+        
+        <!-- Adiciona um divisor abaixo dos títulos -->
+        <hr style="border: 1px solid #ff6600; margin: 20px 0;">
+
+        <!-- Adiciona os ícones e links abaixo do divisor -->
+<div style="display: flex; justify-content: space-around; margin-top: 80px;">
+    <div style="text-align: center;">
+        <a href="{% url 'listar_clientes' %}" style="text-decoration: none; color: #FF6600;">
+            <div style="background-color: #fff; border-radius: 50%; padding: 20px; display: inline-block;">
+                <i class="fas fa-users fa-3x" style="color: #FF6600;"></i> 
+            </div>
+            <p style="font-family: 'Play', sans-serif; font-weight: bold; margin-top: 10px;">CLIENTES</p>
+        </a>
+    </div>
+    <div style="text-align: center;">
+        <a href="{% url 'listar_dominios' %}" style="text-decoration: none; color: #FF6600;">
+            <div style="background-color: #fff; border-radius: 50%; padding: 20px; display: inline-block;">
+                <i class="fas fa-globe fa-3x" style="color: #FF6600;"></i>
+            </div>
+            <p style="font-family: 'Play', sans-serif; font-weight: bold; margin-top: 10px;">DOMÍNIOS</p>
+        </a>
+    </div>
+    <div style="text-align: center;">
+        <a href="{% url 'listar_tarefas' %}" style="text-decoration: none; color: #FF6600;">
+            <div style="background-color: #fff; border-radius: 50%; padding: 20px; display: inline-block;">
+                <i class="fas fa-tasks fa-3x" style="color: #FF6600;"></i>
+            </div>
+            <p style="font-family: 'Play', sans-serif; font-weight: bold; margin-top: 10px;">TAREFAS</p>
+        </a>
+    </div>
+    <div style="text-align: center;">
+        <a href="#" style="text-decoration: none; color: #FF6600;">
+            <div style="background-color: #fff; border-radius: 50%; padding: 20px; display: inline-block;">
+                <i class="fas fa-cogs fa-3x" style="color: #FF6600;"></i>
+            </div>
+            <p style="font-family: 'Play', sans-serif; font-weight: bold; margin-top: 10px;">CONFIGURAÇÕES</p>
+        </a>
+    </div>
+</div>
+
     </div>
 
+    <!-- Lado direito: 1/3 do ecrã -->
     <div style="flex: 1; padding-left: 20px;">
         <h2 style="font-size: 1.5rem;">Domínios a Expirar</h2>
         <table style="width: 100%; border-collapse: collapse;">
@@ -45,10 +88,7 @@
             <tbody>
                 {% for tarefa in ultimas_tarefas %}
                 <tr>
-                    <td 
-                        style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;"
-                        data-tooltip="{{ tarefa.cliente.nome }}"  <!-- Armazena o nome do cliente no atributo data-tooltip -->
-                    >{{ tarefa.descricao }}</td>
+                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ tarefa.descricao }}</td>
                     <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ tarefa.get_estado_display }}</td>
                     <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ tarefa.get_prioridade_display }}</td>
                 </tr>
@@ -62,33 +102,5 @@
     </div>
 
 </div>
-
-<!-- Estilo do Tooltip -->
-<style>
-    [data-tooltip] {
-        position: relative;
-        cursor: pointer; /* Muda o cursor para indicar que é interativo */
-    }
-
-    [data-tooltip]:hover::after {
-        content: attr(data-tooltip);
-        position: absolute;
-        left: 50%;
-        bottom: 100%; /* Posiciona o tooltip acima do elemento */
-        transform: translateX(-50%);
-        background: #333; /* Cor de fundo do tooltip */
-        color: #fff; /* Cor do texto do tooltip */
-        padding: 5px 10px;
-        border-radius: 4px;
-        white-space: nowrap; /* Evita que o texto quebre */
-        z-index: 1000;
-        opacity: 0.9; /* Transparência */
-        transition: opacity 0.2s; /* Animação ao aparecer */
-    }
-
-    [data-tooltip]:hover::after {
-        visibility: visible; /* Torna o tooltip visível */
-    }
-</style>
 
 {% endblock %}

@@ -4,7 +4,7 @@ from .models import Cliente
 from .forms import ClienteForm
 
 def listar_clientes(request):
-    clientes = Cliente.objects.all()  # Query para buscar todos os clientes
+    clientes = Cliente.objects.all().order_by('nome')  # Query para buscar todos os clientes
     paginator = Paginator(clientes, 10)  # Mostra 10 clientes por página
 
     page_number = request.GET.get('page')  # Obtém o número da página atual
