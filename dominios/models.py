@@ -21,15 +21,17 @@ class Dominio(models.Model):
     nome = models.CharField(max_length=255)
     extensao = models.CharField(max_length=10, choices=EXTENSOES)
     estado = models.CharField(max_length=10, choices=ESTADOS)
-    data_criacao = models.DateTimeField()
-    data_expiracao = models.DateTimeField()
+    data_criacao = models.DateField()  # Alterado para DateField
+    data_expiracao = models.DateField()  # Alterado para DateField
 
-    # Adicionando um related_name único
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='dominios_dominio')
 
     @property
     def antiguidade(self):
-        return (datetime.now().year - self.data_criacao.year)
+        if self.data_criacao:
+            return (datetime.now().year - self.data_criacao.year)
+        return 0  # Retorna 0 ou outro valor padrão caso não exista data de criação
+
 
     def save(self, *args, **kwargs):
         if self.estado == 'ativo':

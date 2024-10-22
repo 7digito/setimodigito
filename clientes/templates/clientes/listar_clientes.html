@@ -19,11 +19,11 @@
     <tbody>
         {% for cliente in page_obj %}
         <tr>
-            <td style="padding-top: 10px;">{{ cliente.nome }}</td>  <!-- Adiciona espaço superior -->
-            <td style="padding-top: 10px;">{{ cliente.morada }}</td> <!-- Adiciona espaço superior -->
-            <td style="padding-top: 10px;">{{ cliente.nif }}</td> <!-- Adiciona espaço superior -->
-            <td style="padding-top: 10px;">{{ cliente.telefone }}</td> <!-- Adiciona espaço superior -->
-            <td style="padding-top: 10px;">
+            <td style="padding-top: 10px; vertical-align: middle;">{{ cliente.nome }}</td>  <!-- Adiciona espaço superior -->
+            <td style="padding-top: 10px; vertical-align: middle;">{{ cliente.morada }}</td> <!-- Adiciona espaço superior -->
+            <td style="padding-top: 10px; vertical-align: middle;">{{ cliente.nif }}</td> <!-- Adiciona espaço superior -->
+            <td style="padding-top: 10px; vertical-align: middle;">{{ cliente.telefone }}</td> <!-- Adiciona espaço superior -->
+            <td style="padding-top: 10px; vertical-align: middle;">
                 <a href="{% url 'editar_cliente' cliente.id %}" class="btn btn-sm btn-primary">Editar</a>
                 <a href="{% url 'apagar_cliente' cliente.id %}" class="btn btn-sm btn-danger">Eliminar</a>
             </td>

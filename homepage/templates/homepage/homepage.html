@@ -11,21 +11,21 @@
     </div>
 
     <div style="flex: 1;">
-        <h2>Domínios a Expirar</h2>
+        <h2 style="font-size: 1.5rem;">Domínios a Expirar</h2> <!-- Ajuste o tamanho da fonte aqui -->
         <table style="width: 100%; border-collapse: collapse;">
             <thead>
                 <tr>
-                    <th style="padding: 8px;">Nome</th>
-                    <th style="padding: 8px;">Extensão</th>
-                    <th style="padding: 8px;">Data de Expiração</th>
+                    <th style="padding: 8px; font-size: 0.9rem;">Nome</th> <!-- Tamanho da fonte da coluna -->
+                    <th style="padding: 8px; font-size: 0.9rem;">Extensão</th> <!-- Tamanho da fonte da coluna -->
+                    <th style="padding: 8px; font-size: 0.9rem;">Data de Expiração</th> <!-- Tamanho da fonte da coluna -->
                 </tr>
             </thead>
             <tbody>
                 {% for dominio in proximos_dominios %}
                 <tr>
-                    <td style="border-top: 1px solid #ccc; padding: 8px;">{{ dominio.nome }}</td>
-                    <td style="border-top: 1px solid #ccc; padding: 8px;">{{ dominio.extensao }}</td>
-                    <td style="border-top: 1px solid #ccc; padding: 8px;">{{ dominio.data_expiracao|date:"d/m/Y" }}</td>
+                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ dominio.nome }}</td> <!-- Tamanho da fonte da célula -->
+                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ dominio.extensao }}</td> <!-- Tamanho da fonte da célula -->
+                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ dominio.data_expiracao|date:"d/m/Y" }}</td> <!-- Tamanho da fonte da célula -->
                 </tr>
                 {% endfor %}
             </tbody>
