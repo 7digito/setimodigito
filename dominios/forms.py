@@ -4,5 +4,7 @@ from .models import Dominio
 class DominioForm(forms.ModelForm):
     class Meta:
         model = Dominio
-        # Remover 'data_criacao' do formulário, já que ele é não-editável
-        fields = ['nome', 'extensao', 'estado', 'data_expiracao', 'cliente']
+        fields = ['nome', 'extensao', 'estado', 'data_criacao', 'cliente']  # Inclui 'data_criacao', remove 'data_expiracao'
+        widgets = {
+            'data_criacao': forms.DateTimeInput(attrs={'type': 'date'}),
+        }

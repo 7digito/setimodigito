@@ -15,8 +15,8 @@
             <th>Extensão</th>
             <th>Cliente</th> <!-- Exibir o cliente associado -->
             <th>Estado</th>
-            <th>Data de Criação</th>
             <th>Data de Expiração</th>
+            <th>Antiguidade (anos)</th> <!-- Nova coluna para antiguidade -->
             <th>Ações</th>
         </tr>
     </thead>
@@ -27,8 +27,8 @@
             <td>{{ dominio.extensao }}</td>
             <td>{{ dominio.cliente.nome }}</td> <!-- Exibir o nome do cliente -->
             <td>{{ dominio.get_estado_display }}</td> <!-- Exibir o estado legível -->
-            <td>{{ dominio.data_criacao|date:"d/m/Y" }}</td> <!-- Data de criação formatada -->
             <td>{{ dominio.data_expiracao|date:"d/m/Y" }}</td> <!-- Data de expiração formatada -->
+            <td>{{ dominio.antiguidade }}</td> <!-- Exibir antiguidade -->
             <td>
                 <a href="{% url 'editar_dominio' dominio.id %}" class="btn btn-sm btn-primary">Editar</a>
                 <a href="{% url 'excluir_dominio' dominio.id %}" class="btn btn-sm btn-danger">Eliminar</a>
@@ -39,6 +39,5 @@
 </table>
 
 <a href="{% url 'adicionar_dominio' %}" class="btn btn-success">Adicionar Domínio</a>
-
 
 {% endblock %}

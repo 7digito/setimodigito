@@ -3,6 +3,34 @@
 {% block title %}Homepage{% endblock %}
 
 {% block content %}
-    <h1>Bem-vindo à Homepage!</h1>
-    <p>Esta é a página inicial do seu projeto Django.</p>
+<div style="display: flex; padding-top: 20px;">
+
+    <div style="flex: 2; padding-right: 20px;">
+        <h1>Bem-vindo à Homepage!</h1>
+        <p>Esta é a página inicial do seu projeto Django.</p>
+    </div>
+
+    <div style="flex: 1;">
+        <h2>Domínios a Expirar</h2>
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="padding: 8px;">Nome</th>
+                    <th style="padding: 8px;">Extensão</th>
+                    <th style="padding: 8px;">Data de Expiração</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dominio in proximos_dominios %}
+                <tr>
+                    <td style="border-top: 1px solid #ccc; padding: 8px;">{{ dominio.nome }}</td>
+                    <td style="border-top: 1px solid #ccc; padding: 8px;">{{ dominio.extensao }}</td>
+                    <td style="border-top: 1px solid #ccc; padding: 8px;">{{ dominio.data_expiracao|date:"d/m/Y" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
 {% endblock %}
