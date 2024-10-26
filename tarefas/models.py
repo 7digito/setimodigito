@@ -3,9 +3,9 @@ from clientes.models import Cliente  # Importar o modelo Cliente
 
 class Tarefa(models.Model):
     ESTADOS_TAREFA = [
-        ('pendente', 'Pendente'),
-        ('em_andamento', 'Em Andamento'),
-        ('concluida', 'Concluída'),
+        ('a_fazer', 'A Fazer'),
+        ('em_progresso', 'Em Progresso'),
+        ('concluido', 'Concluído'),
     ]
     PRIORIDADES = [
         ('baixa', 'Baixa'),

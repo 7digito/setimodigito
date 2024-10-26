@@ -3,104 +3,148 @@
 {% block title %}Homepage{% endblock %}
 
 {% block content %}
-<div style="display: flex; padding: 20px 20px;">
+<div class="container mt-5">
+    
+    <!-- Título e Descrição -->
+    <h1 style="font-family: 'Play', sans-serif; font-weight: 700; color: #FF6600; font-size: 3rem;">SÉTIMO DIGITO</h1>
+    <p class="lead" style="font-family: 'Play', sans-serif;; font-size: 1.2em;">WEB AND DIGITAL SOLUTIONS</p>
 
-    <!-- Lado esquerdo: 2/3 do ecrã -->
-    <div style="flex: 2; padding-right: 20px; border-right: 1px solid #ccc;">
-        <h1 style="font-family: 'Play', sans-serif; font-weight: 700; color: #FF6600; font-size: 3rem ;">SÉTIMO DIGITO</h1>
-        <p style="font-family: 'Play', sans-serif; font-size: 1.2em;">WEB AND DIGITAL SOLUTIONS</p>
-        
-        
-        <!-- Adiciona um divisor abaixo dos títulos -->
-        <hr style="border: 1px solid #ff6600; margin: 20px 0;">
+    <hr class="my-4">
 
-        <!-- Adiciona os ícones e links abaixo do divisor -->
-<div style="display: flex; justify-content: space-around; margin-top: 80px;">
-    <div style="text-align: center;">
-        <a href="{% url 'listar_clientes' %}" style="text-decoration: none; color: #FF6600;">
-            <div style="background-color: #fff; border-radius: 50%; padding: 20px; display: inline-block;">
-                <i class="fas fa-users fa-3x" style="color: #FF6600;"></i> 
+    <!-- Seção Principal com Kanban e Domínios usando Flexbox -->
+    <div class="d-flex">
+
+        <!-- Kanban das Tarefas -->
+        <div class="flex-grow-1 me-4"> <!-- flex-grow para ocupar mais espaço e margem direita -->
+            <h2 class="my-4">Planeamento</h2>
+            <div class="row">
+
+                <!-- Coluna A Fazer -->
+                <div class="col-md-6">
+                    <div class="card border-primary mb-4">
+                        <div class="card-header text-white" style="background-color: #FF6600;">A Fazer</div>
+                        <div class="card-body">
+                            {% for tarefa in tarefas_a_fazer %}
+                                <div class="card mb-2 shadow-sm">
+                                    <div class="card-body" style="font-size: 0.9em;">
+                                        <p class="card-text">
+                                            <strong>{{ tarefa.cliente.nome }}</strong><br>
+                                            <small>{{ tarefa.descricao }}</small>
+                                        </p>
+                                        {% if tarefa.get_prioridade_display == "Alta" %}
+                                            <span class="badge bg-danger">{{ tarefa.get_prioridade_display }}</span>
+                                        {% elif tarefa.get_prioridade_display == "Média" %}
+                                            <span class="badge bg-warning">{{ tarefa.get_prioridade_display }}</span>
+                                        {% elif tarefa.get_prioridade_display == "Baixa" %}
+                                            <span class="badge bg-success">{{ tarefa.get_prioridade_display }}</span>
+                                        {% endif %}
+                                        <a href="{% url 'editar_tarefa' tarefa.id %}" class="btn btn-sm" style="background-color: #4A4A4A; color: white; float: right;">
+                                            <i class="bi bi-pencil-fill text-white"></i> <!-- Ícone em branco -->
+                                        </a>
+                                    </div>
+                                </div>
+                            {% empty %}
+                            <p class="text-muted">Nenhuma tarefa a fazer.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coluna Em Progresso -->
+                <div class="col-md-6">
+                    <div class="card border-warning mb-4">
+                        <div class="card-header bg-warning text-white">Em Progresso</div>
+                        <div class="card-body">
+                            {% for tarefa in tarefas_em_progresso %}
+                                <div class="card mb-2 shadow-sm">
+                                    <div class="card-body" style="font-size: 0.9em;">
+                                        <p class="card-text">
+                                            <strong>{{ tarefa.cliente.nome }}</strong><br>
+                                            <small>{{ tarefa.descricao }}</small>
+                                        </p>
+                                        {% if tarefa.get_prioridade_display == "Alta" %}
+                                            <span class="badge bg-danger">{{ tarefa.get_prioridade_display }}</span>
+                                        {% elif tarefa.get_prioridade_display == "Média" %}
+                                            <span class="badge bg-warning">{{ tarefa.get_prioridade_display }}</span>
+                                        {% elif tarefa.get_prioridade_display == "Baixa" %}
+                                            <span class="badge bg-success">{{ tarefa.get_prioridade_display }}</span>
+                                        {% endif %}
+                                        <a href="{% url 'editar_tarefa' tarefa.id %}" class="btn btn-sm" style="background-color: #4A4A4A; color: white; float: right;">
+                                            <i class="bi bi-pencil-fill text-white"></i> <!-- Ícone em branco -->
+                                        </a>
+                                    </div>
+                                </div>
+                            {% empty %}
+                            <p class="text-muted">Nenhuma tarefa em progresso.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coluna Concluído -->
+                <div class="col-md-12">
+                    <div class="card border-success mb-4">
+                        <div class="card-header bg-success text-white">Concluído</div>
+                        <div class="card-body">
+                            {% for tarefa in tarefas_concluidas %}
+                                <div class="card mb-2 shadow-sm">
+                                    <div class="card-body" style="font-size: 0.9em;">
+                                        <p class="card-text">
+                                            <strong>{{ tarefa.cliente.nome }}</strong><br>
+                                            <small>{{ tarefa.descricao }}</small>
+                                        </p>
+                                        {% if tarefa.get_prioridade_display == "Alta" %}
+                                            <span class="badge bg-danger">{{ tarefa.get_prioridade_display }}</span>
+                                        {% elif tarefa.get_prioridade_display == "Média" %}
+                                            <span class="badge bg-warning">{{ tarefa.get_prioridade_display }}</span>
+                                        {% elif tarefa.get_prioridade_display == "Baixa" %}
+                                            <span class="badge bg-success">{{ tarefa.get_prioridade_display }}</span>
+                                        {% endif %}
+                                        <a href="{% url 'editar_tarefa' tarefa.id %}" class="btn btn-sm" style="background-color: #4A4A4A; color: white; float: right;">
+                                            <i class="bi bi-pencil-fill text-white"></i> <!-- Ícone em branco -->
+                                        </a>
+                                    </div>
+                                </div>
+                            {% empty %}
+                            <p class="text-muted">Nenhuma tarefa concluída.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
             </div>
-            <p style="font-family: 'Play', sans-serif; font-weight: bold; margin-top: 10px;">CLIENTES</p>
-        </a>
-    </div>
-    <div style="text-align: center;">
-        <a href="{% url 'listar_dominios' %}" style="text-decoration: none; color: #FF6600;">
-            <div style="background-color: #fff; border-radius: 50%; padding: 20px; display: inline-block;">
-                <i class="fas fa-globe fa-3x" style="color: #FF6600;"></i>
-            </div>
-            <p style="font-family: 'Play', sans-serif; font-weight: bold; margin-top: 10px;">DOMÍNIOS</p>
-        </a>
-    </div>
-    <div style="text-align: center;">
-        <a href="{% url 'listar_tarefas' %}" style="text-decoration: none; color: #FF6600;">
-            <div style="background-color: #fff; border-radius: 50%; padding: 20px; display: inline-block;">
-                <i class="fas fa-tasks fa-3x" style="color: #FF6600;"></i>
-            </div>
-            <p style="font-family: 'Play', sans-serif; font-weight: bold; margin-top: 10px;">TAREFAS</p>
-        </a>
-    </div>
-    <div style="text-align: center;">
-        <a href="#" style="text-decoration: none; color: #FF6600;">
-            <div style="background-color: #fff; border-radius: 50%; padding: 20px; display: inline-block;">
-                <i class="fas fa-cogs fa-3x" style="color: #FF6600;"></i>
-            </div>
-            <p style="font-family: 'Play', sans-serif; font-weight: bold; margin-top: 10px;">CONFIGURAÇÕES</p>
-        </a>
+        </div>
+
+        <!-- Divisor vertical -->
+        <div style="border-left: 1px solid #ccc; height: auto; margin-right: 20px;"></div>
+
+        <!-- Domínios a Expirar -->
+        <div class="flex-shrink-0" style="width: 280px;"> <!-- largura fixa e flex-shrink para que o conteúdo se ajuste -->
+            <h2 class="my-4">Domínios a Expirar</h2>
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nome</th>
+                        <th>Extensão</th>
+                        <th>Expira em</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dominio in proximos_dominios %}
+                    <tr>
+                        <td>{{ dominio.nome }}</td>
+                        <td>{{ dominio.extensao }}</td>
+                        <td>{{ dominio.data_expiracao|date:"d/m/Y" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center">Nenhum domínio a expirar.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
     </div>
 </div>
-
-    </div>
-
-    <!-- Lado direito: 1/3 do ecrã -->
-    <div style="flex: 1; padding-left: 20px;">
-        <h2 style="font-size: 1.5rem;">Domínios a Expirar</h2>
-        <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-                <tr>
-                    <th style="padding: 8px; font-size: 0.9rem;">Nome</th>
-                    <th style="padding: 8px; font-size: 0.9rem;">Extensão</th>
-                    <th style="padding: 8px; font-size: 0.9rem;">Data de Expiração</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for dominio in proximos_dominios %}
-                <tr>
-                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ dominio.nome }}</td>
-                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ dominio.extensao }}</td>
-                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ dominio.data_expiracao|date:"d/m/Y" }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <hr style="border: 1px solid #ccc; margin: 20px 0;">
-
-        <h2 style="font-size: 1.5rem;">Últimas Tarefas</h2>
-        <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-                <tr>
-                    <th style="padding: 8px; font-size: 0.9rem;">Descrição</th>
-                    <th style="padding: 8px; font-size: 0.9rem;">Estado</th>
-                    <th style="padding: 8px; font-size: 0.9rem;">Prioridade</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for tarefa in ultimas_tarefas %}
-                <tr>
-                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ tarefa.descricao }}</td>
-                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ tarefa.get_estado_display }}</td>
-                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ tarefa.get_prioridade_display }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="3" style="text-align: center; padding: 8px; font-size: 0.9rem;">Nenhuma tarefa encontrada.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-</div>
-
 {% endblock %}
