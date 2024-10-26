@@ -1,43 +1,146 @@
 {% extends 'base.html' %}
-
 {% load static %}
 {% block title %}Lista de Domínios{% endblock %}
 
 {% block content %}
-
 <link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
 
-<h1 class="mt-4">Lista de Domínios</h1>
+<h1 class="mt-4" style="color: #ff6d00;">Lista de Domínios</h1>
+<hr style="border-color: #ff6d00;">
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+    <a href="{% url 'adicionar_dominio' %}" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Adiconar
+    </a>
+    <form action="{% url 'listar_dominios' %}" method="get" class="form-inline">
+        <div class="input-group">
+            <input type="text" name="search" id="search" class="form-control" style="width: 300px;"
+                placeholder="Pesquisar..." value="{{ search_query }}">
+
+        </div>
+    </form>
+</div>
+
+<style>
+    /* Apenas bordas das células em laranja */
+    .table th,
+    .table td {
+        border-bottom: 1px solid #ff6d00;
+        /* Bordas laranja */
+        color: inherit;
+        /* Mantém a cor original do texto */
+    }
+
+    /* Fundo alternado das linhas */
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #ffd181;
+    }
+</style>
+
+<!-- Tabela de domínios -->
 <table class="table table-striped">
     <thead>
         <tr>
             <th>Nome</th>
             <th>Extensão</th>
-            <th>Cliente</th> <!-- Exibir o cliente associado -->
+            <th>Cliente</th>
             <th>Estado</th>
             <th>Data de Expiração</th>
-            <th>Antiguidade (anos)</th> <!-- Nova coluna para antiguidade -->
+            <th>Antiguidade (anos)</th>
             <th>Ações</th>
         </tr>
     </thead>
     <tbody>
-        {% for dominio in dominios %}
+        {% for dominio in page_obj %}
         <tr>
             <td>{{ dominio.nome }}</td>
             <td>{{ dominio.extensao }}</td>
-            <td>{{ dominio.cliente.nome }}</td> <!-- Exibir o nome do cliente -->
-            <td>{{ dominio.get_estado_display }}</td> <!-- Exibir o estado legível -->
-            <td>{{ dominio.data_expiracao|date:"d/m/Y" }}</td> <!-- Data de expiração formatada -->
-            <td>{{ dominio.antiguidade }}</td> <!-- Exibir antiguidade -->
+            <td>{{ dominio.cliente.nome }}</td>
+            <td>{{ dominio.get_estado_display }}</td>
+            <td>{{ dominio.data_expiracao|date:"d/m/Y" }}</td>
+            <td>{{ dominio.antiguidade }}</td>
             <td>
-                <a href="{% url 'editar_dominio' dominio.id %}" class="btn btn-sm btn-primary">Editar</a>
-                <a href="{% url 'excluir_dominio' dominio.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+                <a href="{% url 'editar_dominio' dominio.id %}" class="btn btn-sm btn-primary">
+                    <i class="bi bi-pencil" style="color: #ffffff;"></i>
+                </a>
+                <a href="{% url 'excluir_dominio' dominio.id %}" class="btn btn-sm btn-danger">
+                    <i class="bi bi-trash" style="color: #ffffff;"></i>
+                </a>
+                <a href="{% url 'detalhes_dominio' dominio.id %}" class="btn btn-sm btn-warning">
+                    <i class="bi bi-info-circle" style="color: #ffffff;"></i>
+                </a>
             </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7">Nenhum domínio encontrado.</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 
-<a href="{% url 'adicionar_dominio' %}" class="btn btn-success">Adicionar Domínio</a>
+<!-- Navegação da paginação -->
+<div class="d-flex justify-content-center mb-4">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1&search={{ search_query }}" aria-label="Primeira"
+                    style="color: #ff6d00;">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}"
+                    aria-label="Anterior" style="color: #ff6d00;">
+                    <span aria-hidden="true">&#8249;</span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+            <li class="page-item active" aria-current="page">
+                <span class="page-link" style="background-color: #ff6d00; color: white;">{{ num }}</span>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}&search={{ search_query }}" style="color: #ff6d00;">{{ num
+                    }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}"
+                    aria-label="Próxima" style="color: #ff6d00;">
+                    <span aria-hidden="true">&#8250;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&search={{ search_query }}"
+                    aria-label="Última" style="color: #ff6d00;">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+<script>
+    // Pesquisa dinâmica
+    document.getElementById('search').addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+        const rows = document.querySelectorAll('tbody tr');
+
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            const match = Array.from(cells).some(cell => cell.textContent.toLowerCase().includes(query));
+            row.style.display = match ? '' : 'none';
+        });
+    });
+</script>
 
 {% endblock %}

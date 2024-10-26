@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Detalhes do Domínio{% endblock %}
+
+{% block content %}
+<h1 class="mt-4" style="color: #ff6d00;">Detalhes do Domínio</h1>
+<hr style="border-color: #ff6d00;">
+
+<table class="table">
+    <tr>
+        <th>Nome</th>
+        <td>{{ dominio.nome }}</td>
+    </tr>
+    <tr>
+        <th>Extensão</th>
+        <td>{{ dominio.extensao }}</td>
+    </tr>
+    <tr>
+        <th>Cliente</th>
+        <td>{{ dominio.cliente.nome }}</td>
+    </tr>
+    <tr>
+        <th>Estado</th>
+        <td>{{ dominio.get_estado_display }}</td>
+    </tr>
+    <tr>
+        <th>Data de Expiração</th>
+        <td>{{ dominio.data_expiracao|date:"d/m/Y" }}</td>
+    </tr>
+    <tr>
+        <th>Antiguidade (anos)</th>
+        <td>{{ dominio.antiguidade }}</td>
+    </tr>
+</table>
+
+<a href="{% url 'listar_dominios' %}" class="btn btn-secondary">Voltar</a>
+{% endblock %}
