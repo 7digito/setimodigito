@@ -7,61 +7,68 @@
 <h1 class="mt-4" style="color: #ff6d00;">Tarefas</h1>
 <hr style="border-color: #ff6d00;">
 
-<div class="kanban-container d-flex justify-content-around">
-    <div class="kanban-column" style="background-color: #d4edda; padding: 10px;">
-        <h2>A Fazer</h2>
-        {% for tarefa in tarefas_a_fazer %}
-            <div class="kanban-item">
-                <h6 class="text-muted">{{ tarefa.cliente }}</h6>
-                <h4>{{ tarefa.descricao }}</h4>
-                <span class="badge {% if tarefa.prioridade == 'alta' %}bg-danger{% elif tarefa.prioridade == 'media' %}bg-warning{% else %}bg-success{% endif %}">
-                    {{ tarefa.get_prioridade_display }}
-                </span>
-                <div class="d-flex justify-content-end">
-                    <a href="{% url 'editar_tarefa' tarefa.id %}" class="btn btn-sm btn-light">
-                        <i class="bi bi-pencil"></i>
-                    </a>
-                    <a href="#" class="btn btn-sm btn-light ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                       data-nome="{{ tarefa.descricao }}" data-id="{{ tarefa.id }}"
-                       onclick="setDeleteData('{{ tarefa.descricao }}', '{{ tarefa.id }}')">
-                        <i class="bi bi-trash"></i>
-                    </a>
+<div class="kanban-container d-flex">
+    <div class="kanban-columns" style="width: 75%; display: flex;">
+        <!-- Coluna A Fazer -->
+        <div class="kanban-column" id="a-fazer" style="background-color: #d4edda; padding: 10px;">
+            <h2>A Fazer</h2>
+            {% for tarefa in tarefas_a_fazer %}
+                <div class="kanban-item" data-id="{{ tarefa.id }}" draggable="true">
+                    <h6 class="text-muted">{{ tarefa.cliente }}</h6>
+                    <h4>{{ tarefa.descricao }}</h4>
+                    <span class="badge {% if tarefa.prioridade == 'alta' %}bg-danger{% elif tarefa.prioridade == 'media' %}bg-warning{% else %}bg-success{% endif %}">
+                        {{ tarefa.get_prioridade_display }}
+                    </span>
+                    <div class="d-flex justify-content-end">
+                        <a href="{% url 'editar_tarefa' tarefa.id %}" class="btn btn-sm btn-light">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="#" class="btn btn-sm btn-light ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                           data-nome="{{ tarefa.descricao }}" data-id="{{ tarefa.id }}"
+                           onclick="setDeleteData('{{ tarefa.descricao }}', '{{ tarefa.id }}')">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </div>
                 </div>
-            </div>
-        {% empty %}
-            <p>Nenhuma tarefa a fazer.</p>
-        {% endfor %}
+            {% empty %}
+                <p>Nenhuma tarefa a fazer.</p>
+            {% endfor %}
+        </div>
+
+        <!-- Coluna Em Progresso -->
+        <div class="kanban-column" id="em-progresso" style="background-color: #ffecb5; padding: 10px;">
+            <h2>Em Progresso</h2>
+            {% for tarefa in tarefas_em_progresso %}
+                <div class="kanban-item" data-id="{{ tarefa.id }}" draggable="true">
+                    <h6 class="text-muted">{{ tarefa.cliente }}</h6>
+                    <h4>{{ tarefa.descricao }}</h4>
+                    <span class="badge {% if tarefa.prioridade == 'alta' %}bg-danger{% elif tarefa.prioridade == 'media' %}bg-warning{% else %}bg-success{% endif %}">
+                        {{ tarefa.get_prioridade_display }}
+                    </span>
+                    <div class="d-flex justify-content-end">
+                        <a href="{% url 'editar_tarefa' tarefa.id %}" class="btn btn-sm btn-light">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="#" class="btn btn-sm btn-light ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                           data-nome="{{ tarefa.descricao }}" data-id="{{ tarefa.id }}"
+                           onclick="setDeleteData('{{ tarefa.descricao }}', '{{ tarefa.id }}')">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            {% empty %}
+                <p>Nenhuma tarefa em progresso.</p>
+            {% endfor %}
+        </div>
     </div>
 
-    <div class="kanban-column" style="background-color: #fff3cd; padding: 10px;">
-        <h2>Em Progresso</h2>
-        {% for tarefa in tarefas_em_progresso %}
-            <div class="kanban-item">
-                <h6 class="text-muted">{{ tarefa.cliente }}</h6>
-                <h4>{{ tarefa.descricao }}</h4>
-                <span class="badge {% if tarefa.prioridade == 'alta' %}bg-danger{% elif tarefa.prioridade == 'media' %}bg-warning{% else %}bg-success{% endif %}">
-                    {{ tarefa.get_prioridade_display }}
-                </span>
-                <div class="d-flex justify-content-end">
-                    <a href="{% url 'editar_tarefa' tarefa.id %}" class="btn btn-sm btn-light">
-                        <i class="bi bi-pencil"></i>
-                    </a>
-                    <a href="#" class="btn btn-sm btn-light ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                       data-nome="{{ tarefa.descricao }}" data-id="{{ tarefa.id }}"
-                       onclick="setDeleteData('{{ tarefa.descricao }}', '{{ tarefa.id }}')">
-                        <i class="bi bi-trash"></i>
-                    </a>
-                </div>
-            </div>
-        {% empty %}
-            <p>Nenhuma tarefa em progresso.</p>
-        {% endfor %}
-    </div>
+    <div class="divider" style="width: 1px; background-color: #ff6d00;"></div> <!-- Divisor vertical em laranja -->
 
-    <div class="kanban-column" style="background-color: #c3e6cb; padding: 10px;">
+    <!-- Coluna Concluídas -->
+    <div class="kanban-column" id="concluidas" style="width: 25%; background-color: #cce5ff; padding: 10px; margin-left: 10px;">
         <h2>Concluídas</h2>
         {% for tarefa in tarefas_concluidas %}
-            <div class="kanban-item">
+            <div class="kanban-item" data-id="{{ tarefa.id }}" draggable="true">
                 <h6 class="text-muted">{{ tarefa.cliente }}</h6>
                 <h4>{{ tarefa.descricao }}</h4>
                 <span class="badge {% if tarefa.prioridade == 'alta' %}bg-danger{% elif tarefa.prioridade == 'media' %}bg-warning{% else %}bg-success{% endif %}">
@@ -84,16 +91,44 @@
     </div>
 </div>
 
+<!-- Modal de confirmação de eliminação -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Você tem certeza que deseja excluir a tarefa "<span id="tarefaNome"></span>"?
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" id="tarefa_id" name="tarefa_id">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
     .kanban-container {
         display: flex;
-        justify-content: space-between;
+    }
+    .kanban-columns {
+        display: flex;
+        width: 75%;
     }
     .kanban-column {
-        width: 30%;
+        flex: 1; /* Faz com que as colunas se espalhem igualmente no espaço restante */
         border: 1px solid #ddd;
         border-radius: 5px;
         padding: 10px;
+        margin-right: 10px; /* Espaçamento entre as colunas */
+        min-height: 100px; /* Altura mínima para visualização */
     }
     .kanban-item {
         background: #ffffff;
@@ -104,8 +139,57 @@
     }
 </style>
 
-<!-- Modal de confirmação de eliminação -->
+<!-- Script para arrastar e soltar as tarefas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 <script>
+    // Inicializa o SortableJS para cada coluna
+    const columns = document.querySelectorAll('.kanban-column');
+    columns.forEach(column => {
+        new Sortable(column, {
+            group: 'kanban',
+            animation: 150,
+            onEnd: function (evt) {
+                // Obtém o ID da tarefa arrastada
+                const tarefaId = evt.item.dataset.id;
+                const novoEstado = evt.from.id; // id da coluna de origem
+
+                // Mapeia o novo estado baseado na coluna de destino
+                const novosEstudos = {
+                    'a-fazer': 'a_fazer',
+                    'em-progresso': 'em_progresso',
+                    'concluidas': 'concluido'
+                };
+                const estadoDestino = evt.to.id;
+
+                // Chama função para atualizar o estado da tarefa no backend
+                atualizarEstadoTarefa(tarefaId, novosEstudos[estadoDestino]);
+            }
+        });
+    });
+
+    // Função para atualizar o estado da tarefa via AJAX
+    function atualizarEstadoTarefa(tarefaId, novoEstado) {
+        fetch(`/update-task-status/`, {  // Use a URL correta
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ 
+                task_id: tarefaId,
+                new_status: novoEstado  // Enviando o novo estado
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao atualizar o estado da tarefa.');
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+        });
+    }
+
     // Função para configurar os dados da tarefa a ser eliminada no modal
     function setDeleteData(nome, id) {
         document.getElementById('tarefaNome').textContent = nome; // Atualiza o nome da tarefa no modal
