@@ -8,31 +8,42 @@
 <hr style="border-color: #ff6d00;">
 
 <div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+    <!-- Botão para adicionar um novo cliente -->
     <a href="{% url 'adicionar_cliente' %}" class="btn btn-success">
         <i class="bi bi-plus-circle"></i> Adicionar Cliente
     </a>
+    
+    <!-- Formulário de pesquisa -->
     <form action="{% url 'listar_clientes' %}" method="get" class="form-inline">
         <div class="input-group">
-            <input type="text" name="search" class="form-control" style="width: 300px;" placeholder="Pesquisar..."
-                id="clientSearch">
-
+            <!-- Campo de entrada para pesquisa -->
+            <input type="text" name="search" class="form-control" style="width: 300px;" 
+                   placeholder="Pesquisar..." id="clientSearch" value="{{ search_query }}">
+            
+            <!-- Botão de pesquisa que altera seu texto dependendo do conteúdo do campo -->
+            <button class="btn" type="button" id="searchButton" style="background-color: #ff6d00; color: white;" 
+                    onclick="clearSearch()">
+                {% if search_query %}
+                    Limpar
+                {% else %}
+                    Pesquisar
+                {% endif %}
+            </button>
         </div>
     </form>
 </div>
 
 <style>
-    /* Apenas bordas das células em laranja */
+    /* Estilos para as bordas das células da tabela */
     .table th,
     .table td {
-        border-bottom: 1px solid #ff6d00;
-        /* Bordas laranja */
-        color: inherit;
-        /* Mantém a cor original do texto */
+        border-bottom: 1px solid #ff6d00; /* Bordas laranja */
+        color: inherit; /* Mantém a cor original do texto */
     }
 
-    /* Fundo alternado das linhas */
+    /* Estilo para o fundo alternado das linhas da tabela */
     .table-striped tbody tr:nth-of-type(odd) {
-        background-color: #ffd181;
+        background-color: #ffd181; /* Fundo alternado */
     }
 </style>
 
@@ -55,14 +66,17 @@
             <td>{{ cliente.email }}</td>
             <td>{{ cliente.telefone }}</td>
             <td>
+                <!-- Botão para editar o cliente -->
                 <a href="{% url 'editar_cliente' cliente.id %}" class="btn btn-sm btn-primary">
                     <i class="bi bi-pencil" style="color: #ffffff;"></i>
                 </a>
+                <!-- Botão para excluir o cliente, abre um modal de confirmação -->
                 <a href="#" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                    data-nome="{{ cliente.nome }}" data-id="{{ cliente.id }}"
-                    onclick="setDeleteData('{{ cliente.nome }}', '{{ cliente.id }}')">
+                   data-nome="{{ cliente.nome }}" data-id="{{ cliente.id }}"
+                   onclick="setDeleteData('{{ cliente.nome }}', '{{ cliente.id }}')">
                     <i class="bi bi-trash" style="color: #ffffff;"></i>
                 </a>
+                <!-- Botão para ver detalhes do cliente -->
                 <a href="{% url 'detalhes_cliente' cliente.id %}" class="btn btn-sm btn-warning">
                     <i class="bi bi-info-circle" style="color: #ffffff;"></i>
                 </a>
@@ -82,13 +96,12 @@
         <ul class="pagination">
             {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page=1" aria-label="Primeira" style="color: #ff6d00;">
+                <a class="page-link" href="?page=1&search={{ search_query }}" aria-label="Primeira" style="color: #ff6d00;">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Anterior"
-                    style="color: #ff6d00;">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}" aria-label="Anterior" style="color: #ff6d00;">
                     <span aria-hidden="true">&#8249;</span>
                 </a>
             </li>
@@ -101,21 +114,19 @@
             </li>
             {% else %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ num }}" style="color: #ff6d00;">{{ num }}</a>
+                <a class="page-link" href="?page={{ num }}&search={{ search_query }}" style="color: #ff6d00;">{{ num }}</a>
             </li>
             {% endif %}
             {% endfor %}
 
             {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Próxima"
-                    style="color: #ff6d00;">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}" aria-label="Próxima" style="color: #ff6d00;">
                     <span aria-hidden="true">&#8250;</span>
                 </a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Última"
-                    style="color: #ff6d00;">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&search={{ search_query }}" aria-label="Última" style="color: #ff6d00;">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
@@ -148,22 +159,18 @@
 </div>
 
 <script>
-    // Pesquisa dinâmica
-    document.getElementById('clientSearch').addEventListener('input', function () {
-        const query = this.value.toLowerCase();
-        const rows = document.querySelectorAll('#clientTable tbody tr');
+    // Função para limpar o campo de pesquisa e enviar o formulário
+    function clearSearch() {
+        var searchField = document.getElementById('clientSearch');
+        searchField.value = ''; // Limpa o campo de pesquisa
+        searchField.form.submit(); // Envia o formulário
+    }
 
-        rows.forEach(row => {
-            const cells = row.querySelectorAll('td');
-            const match = Array.from(cells).some(cell => cell.textContent.toLowerCase().includes(query));
-            row.style.display = match ? '' : 'none';
-        });
-    });
-
+    // Função para configurar os dados do cliente a ser eliminado no modal
     function setDeleteData(nome, id) {
-        document.getElementById('clienteNome').textContent = nome;
-        document.getElementById('client_id').value = id; // Update this to match the correct id
-        document.getElementById('deleteForm').action = `{% url 'apagar_cliente' 0 %}`.replace('0', id);
+        document.getElementById('clienteNome').textContent = nome; // Atualiza o nome do cliente no modal
+        document.getElementById('client_id').value = id; // Atualiza o id correto
+        document.getElementById('deleteForm').action = `{% url 'apagar_cliente' 0 %}`.replace('0', id); // Define a ação do formulário
     }
 </script>
 

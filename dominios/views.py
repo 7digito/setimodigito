@@ -27,6 +27,7 @@ def listar_dominios(request):
 
 # Adicionar Domínio
 def adicionar_dominio(request):
+    clientes = Cliente.objects.all()  # Carregar todos os clientes
     if request.method == 'POST':
         form = DominioForm(request.POST)
         if form.is_valid():
@@ -34,7 +35,7 @@ def adicionar_dominio(request):
             return redirect('listar_dominios')
     else:
         form = DominioForm()
-    return render(request, 'dominios/adicionar.html', {'form': form})
+    return render(request, 'dominios/adicionar.html', {'form': form, 'clientes': clientes})
 
 # Editar Domínio
 def editar_dominio(request, id):

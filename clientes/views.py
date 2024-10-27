@@ -3,6 +3,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Cliente
 from .forms import ClienteForm
 
+from django.shortcuts import render
+from django.core.paginator import Paginator
+from .models import Cliente
+
 def listar_clientes(request):
     # Obtenha o parâmetro de pesquisa da URL
     search_query = request.GET.get('search', '')
@@ -21,6 +25,7 @@ def listar_clientes(request):
         'page_obj': page_obj,
         'search_query': search_query  # Passa a consulta de pesquisa para o template
     })
+
 
 
 def adicionar_cliente(request):

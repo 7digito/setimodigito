@@ -6,19 +6,27 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
 <!-- Top Bar -->
-<div class="topbar py-1" style="font-family: 'Poppins', sans-serif; background-color: white;">
-    <div class="container-fluid d-flex justify-content-end">
-        <div class="date text-dark px-2">{{ today }}</div>
-        <div class="user-menu">
-            <a href="{% url 'admin:index' %}" class="text-dark px-2" title="Admin">
-                <i class="bi bi-house-door"></i> Admin
-            </a>
-            <a href="#" class="text-dark px-2" title="Perfil">
-                <i class="bi bi-person-circle"></i> Perfil
-            </a>
-            <a href="#" class="text-dark px-2" title="Sair">
-                <i class="bi bi-box-arrow-right"></i> Sair
-            </a>
+<div class="topbar py-1 d-flex align-items-center" style="font-family: 'Poppins', sans-serif; background-color: white;">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <!-- Logo -->
+        <a href="{% url 'homepage' %}" class="navbar-brand px-3">
+            <img src="{% static 'img/logo.png' %}" alt="Logo" height="50">
+        </a>
+
+        <!-- Data e menu do usuário -->
+        <div class="d-flex align-items-center">
+            <div class="date text-dark px-2">{{ today }}</div>
+            <div class="user-menu">
+                <a href="{% url 'admin:index' %}" class="text-dark px-2" title="Admin">
+                    <i class="bi bi-house-door"></i> Admin
+                </a>
+                <a href="#" class="text-dark px-2" title="Perfil">
+                    <i class="bi bi-person-circle"></i> Perfil
+                </a>
+                <a href="#" class="text-dark px-2" title="Sair">
+                    <i class="bi bi-box-arrow-right"></i> Sair
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -26,10 +34,6 @@
 <!-- Barra Principal -->
 <nav class="navbar navbar-expand-lg" style="background-color: #ff9201;">
     <div class="container-fluid">
-        <a class="navbar-brand px-3" href="{% url 'homepage' %}">
-            <img src="{% static 'img/logo_head.png' %}" alt="Logo" height="50">
-        </a>
-
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -63,10 +67,12 @@
                         <i class="bi bi-check-circle"></i> Tarefas
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="tarefasDropdown">
+                        <li><a class="dropdown-item" href="{% url 'tarefas_home' %}">Home</a></li> <!-- Link para a Home -->
                         <li><a class="dropdown-item" href="{% url 'listar_tarefas' %}">Listar Tarefas</a></li>
                         <li><a class="dropdown-item" href="{% url 'adicionar_tarefa' %}">Adicionar Tarefa</a></li>
                     </ul>
                 </li>
+                
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle text-white px-3" href="#" id="trabalhosDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
