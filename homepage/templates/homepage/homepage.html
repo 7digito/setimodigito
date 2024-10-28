@@ -49,8 +49,26 @@
                         style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;"
                         data-tooltip="{{ tarefa.cliente.nome }}"  <!-- Armazena o nome do cliente no atributo data-tooltip -->
                     >{{ tarefa.descricao }}</td>
-                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ tarefa.get_estado_display }}</td>
-                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ tarefa.get_prioridade_display }}</td>
+                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">
+                        {% if tarefa.estado == 'pendente' %}
+                            <span class="badge bg-warning text-dark">Pendente</span>
+                        {% elif tarefa.estado == 'em_andamento' %}
+                            <span class="badge bg-info text-dark">Em Andamento</span>
+                        {% elif tarefa.estado == 'concluida' %}
+                            <span class="badge bg-success">Concluída</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Outro Estado</span>
+                        {% endif %}
+                    </td>
+                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">
+                        {% if tarefa.prioridade == 'alta' %}
+                            <span class="badge bg-danger">Alta</span>
+                        {% elif tarefa.prioridade == 'media' %}
+                            <span class="badge bg-warning text-dark">Média</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Baixa</span>
+                        {% endif %}
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>
