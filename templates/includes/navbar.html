@@ -1,43 +1,52 @@
 {% load static %}
-{% load tz %} <!-- Se você estiver usando fuso horário -->
+{% load tz %}
 {% now "d/m/Y" as today %}
 
 <!-- Link para Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-<!-- Top Bar -->
-<div class="topbar py-1" style="font-family: 'Poppins', sans-serif; padding-top: 25px !important; padding-bottom: 10px !important; background-color: #ffb74d;">
-    <div class="container-fluid d-flex justify-content-end">
-        <div class="date text-dark px-2">{{ today }}</div>
-        <div class="user-menu">
-            <a href="{% url 'admin:index' %}" class="text-dark px-2" title="Admin">
-                <i class="bi bi-house-door"></i> Admin
-            </a>
-            <a href="#" class="text-dark px-2" title="Perfil">
-                <i class="bi bi-person-circle"></i> Perfil
-            </a>
-            <a href="#" class="text-dark px-2" title="Sair">
-                <i class="bi bi-box-arrow-right"></i> Sair
-            </a>
+<!-- Top Bar com data e menu do usuário -->
+<div class="topbar py-1 d-flex align-items-center" style="font-family: 'Poppins', sans-serif; background-color: white;">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <!-- Logo do site -->
+        <a href="{% url 'homepage' %}" class="navbar-brand px-3">
+            <img src="{% static 'img/logo.png' %}" alt="Logo" height="50">
+        </a>
+
+        <!-- Exibe a data atual e o menu do usuário -->
+        <div class="d-flex align-items-center">
+            <div class="date text-dark px-2">{{ today }}</div>
+            <div class="user-menu">
+                <a href="{% url 'admin:index' %}" class="text-dark px-2" title="Admin">
+                    <i class="bi bi-house-door"></i> Admin
+                </a>
+                <a href="#" class="text-dark px-2" title="Perfil">
+                    <i class="bi bi-person-circle"></i> Perfil
+                </a>
+                <a href="#" class="text-dark px-2" title="Sair">
+                    <i class="bi bi-box-arrow-right"></i> Sair
+                </a>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Barra Principal -->
-<nav class="navbar navbar-expand-lg bg-secondary">
+<!-- Barra Principal de navegação em estilo "Pills" com dropdowns -->
+<nav class="navbar navbar-expand-lg" style="background-color: #ffab41;">
     <div class="container-fluid">
-        <a class="navbar-brand px-3" href="{% url 'homepage' %}">
-            <img src="{% static 'img/logo_head.png' %}" alt="Logo" height="50">
-        </a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <!-- Botão de toggle para navbar em dispositivos móveis -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
+        <!-- Links de navegação com dropdowns -->
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto" style="font-family: 'Poppins', sans-serif; font-weight: 600;">
+            <ul class="navbar-nav ms-auto nav-pills" style="font-family: 'Poppins', sans-serif; font-weight: 600;">
+
+                <!-- Dropdown Clientes -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-white px-3" href="#" id="clientesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle text-white px-3" href="#" id="clientesDropdown" role="button" aria-expanded="false">
                         <i class="bi bi-people"></i> Clientes
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="clientesDropdown">
@@ -45,8 +54,10 @@
                         <li><a class="dropdown-item" href="{% url 'adicionar_cliente' %}">Adicionar Cliente</a></li>
                     </ul>
                 </li>
+
+                <!-- Dropdown Domínios -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-white px-3" href="#" id="dominiosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle text-white px-3" href="#" id="dominiosDropdown" role="button" aria-expanded="false">
                         <i class="bi bi-globe"></i> Domínios
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dominiosDropdown">
@@ -54,17 +65,22 @@
                         <li><a class="dropdown-item" href="{% url 'adicionar_dominio' %}">Adicionar Domínio</a></li>
                     </ul>
                 </li>
+
+                <!-- Dropdown Tarefas -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-white px-3" href="#" id="tarefasDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle text-white px-3" href="#" id="tarefasDropdown" role="button" aria-expanded="false">
                         <i class="bi bi-check-circle"></i> Tarefas
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="tarefasDropdown">
+                        <li><a class="dropdown-item" href="{% url 'tarefas_home' %}">Home</a></li>
                         <li><a class="dropdown-item" href="{% url 'listar_tarefas' %}">Listar Tarefas</a></li>
                         <li><a class="dropdown-item" href="{% url 'adicionar_tarefa' %}">Adicionar Tarefa</a></li>
                     </ul>
                 </li>
+
+                <!-- Dropdown Trabalhos -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-white px-3" href="#" id="trabalhosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle text-white px-3" href="#" id="trabalhosDropdown" role="button" aria-expanded="false">
                         <i class="bi bi-briefcase"></i> Trabalhos
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="trabalhosDropdown">
@@ -73,6 +89,8 @@
                         <li><a class="dropdown-item" href="#">Terminados</a></li>
                     </ul>
                 </li>
+
+                <!-- Link Recursos sem dropdown -->
                 <li class="nav-item">
                     <a class="nav-link text-white px-3" href="#">
                         <i class="bi bi-box-seam"></i> Recursos
@@ -82,3 +100,23 @@
         </div>
     </div>
 </nav>
+
+<!-- Custom CSS para ajustar o estilo Pills da navbar e mostrar dropdown ao passar o mouse -->
+<style>
+    /* Estilo para o item ativo em "Pills" */
+    .nav-pills .nav-link.active {
+        background-color: #ff6d00; /* Cor de fundo ao estar ativo */
+        color: white; /* Cor do texto ao estar ativo */
+    }
+    
+    /* Cor de fundo ao passar o mouse sobre os links */
+    .nav-pills .nav-link:hover {
+        background-color: #ff9201; /* Cor ao passar o mouse */
+        color: white;
+    }
+
+    /* Mostrar o dropdown ao passar o mouse */
+    .nav-item.dropdown:hover .dropdown-menu {
+        display: block;
+    }
+</style>

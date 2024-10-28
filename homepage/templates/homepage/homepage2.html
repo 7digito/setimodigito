@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}Homepage{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <!-- Título e Descrição -->
+    <h1 style="font-family: 'Play', sans-serif; font-weight: 700; color: #FF6600; font-size: 3rem;">SÉTIMO DIGITO</h1>
+    <p class="lead" style="font-family: 'Play', sans-serif; font-size: 1.2em;">WEB AND DIGITAL SOLUTIONS</p>
+
+    <hr class="my-4">
+
+    <!-- Seção Principal com Kanban e Domínios usando Flexbox -->
+    <div class="d-flex">
+
+        <!-- Kanban das Tarefas -->
+        <div class="flex-grow-1 me-4">
+            <h2 class="my-4">Planeamento</h2>
+            <div class="row">
+
+                <!-- Coluna A Fazer -->
+                <div class="col-md-6">
+                    <div class="card border-primary mb-4">
+                        <div class="card-header text-white" style="background-color: #FF6600;">A Fazer</div>
+                        <div class="card-body">
+                            {% for tarefa in tarefas_a_fazer %}
+                            <div class="card mb-2 shadow-sm">
+                                <div class="card-body" style="font-size: 0.9em;">
+                                    <p class="card-text">
+                                        <strong>{{ tarefa.cliente.nome }}</strong><br>
+                                        <small>{{ tarefa.descricao }}</small>
+                                    </p>
+                                    {% if tarefa.get_prioridade_display == "Alta" %}
+                                    <span class="badge bg-danger">{{ tarefa.get_prioridade_display }}</span>
+                                    {% elif tarefa.get_prioridade_display == "Média" %}
+                                    <span class="badge bg-warning">{{ tarefa.get_prioridade_display }}</span>
+                                    {% elif tarefa.get_prioridade_display == "Baixa" %}
+                                    <span class="badge bg-success">{{ tarefa.get_prioridade_display }}</span>
+                                    {% endif %}
+                                    <a href="{% url 'editar_tarefa' tarefa.id %}" class="btn btn-sm"
+                                        style="background-color: #4A4A4A; color: white; float: right;">
+                                        <i class="bi bi-pencil-fill text-white"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <p class="text-muted">Nenhuma tarefa a fazer.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coluna Em Progresso -->
+                <div class="col-md-6">
+                    <div class="card border-warning mb-4">
+                        <div class="card-header bg-warning text-white">Em Progresso</div>
+                        <div class="card-body">
+                            {% for tarefa in tarefas_em_progresso %}
+                            <div class="card mb-2 shadow-sm">
+                                <div class="card-body" style="font-size: 0.9em;">
+                                    <p class="card-text">
+                                        <strong>{{ tarefa.cliente.nome }}</strong><br>
+                                        <small>{{ tarefa.descricao }}</small>
+                                    </p>
+                                    {% if tarefa.get_prioridade_display == "Alta" %}
+                                    <span class="badge bg-danger">{{ tarefa.get_prioridade_display }}</span>
+                                    {% elif tarefa.get_prioridade_display == "Média" %}
+                                    <span class="badge bg-warning">{{ tarefa.get_prioridade_display }}</span>
+                                    {% elif tarefa.get_prioridade_display == "Baixa" %}
+                                    <span class="badge bg-success">{{ tarefa.get_prioridade_display }}</span>
+                                    {% endif %}
+                                    <a href="{% url 'editar_tarefa' tarefa.id %}" class="btn btn-sm"
+                                        style="background-color: #4A4A4A; color: white; float: right;">
+                                        <i class="bi bi-pencil-fill text-white"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <p class="text-muted">Nenhuma tarefa em progresso.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coluna Concluído -->
+                <div class="col-md-12">
+                    <div class="card border-success mb-4">
+                        <div class="card-header bg-success text-white">Concluído</div>
+                        <div class="card-body">
+                            {% for tarefa in tarefas_concluidas %}
+                            <div class="card mb-2 shadow-sm">
+                                <div class="card-body" style="font-size: 0.9em;">
+                                    <p class="card-text">
+                                        <strong>{{ tarefa.cliente.nome }}</strong><br>
+                                        <small>{{ tarefa.descricao }}</small>
+                                    </p>
+                                    {% if tarefa.get_prioridade_display == "Alta" %}
+                                    <span class="badge bg-danger">{{ tarefa.get_prioridade_display }}</span>
+                                    {% elif tarefa.get_prioridade_display == "Média" %}
+                                    <span class="badge bg-warning">{{ tarefa.get_prioridade_display }}</span>
+                                    {% elif tarefa.get_prioridade_display == "Baixa" %}
+                                    <span class="badge bg-success">{{ tarefa.get_prioridade_display }}</span>
+                                    {% endif %}
+                                    <a href="{% url 'editar_tarefa' tarefa.id %}" class="btn btn-sm"
+                                        style="background-color: #4A4A4A; color: white; float: right;">
+                                        <i class="bi bi-pencil-fill text-white"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <p class="text-muted">Nenhuma tarefa concluída.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Domínios a Expirar -->
+        <div class="flex-shrink-0" style="width: 280px;">
+            <h2 class="my-4">Domínios a Expirar</h2>
+
+            <!-- Próximo Mês -->
+            <div class="card border-danger mb-4">
+                <div class="card-header bg-danger text-white">Próximo Mês</div>
+                <div class="card-body">
+                    {% for dominio in dominios_proximo_mes %}
+                    <p>
+                        <strong>{{ dominio.nome }}</strong><br>
+                        {{ dominio.extensao }}<br>
+                        Expira em: {{ dominio.data_expiracao|date:"d/m/Y" }}
+                    </p>
+                    {% empty %}
+                    <p class="text-muted">Nenhum domínio expira em 1 mês.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Próximos 3 Meses -->
+            <div class="card border-warning mb-4">
+                <div class="card-header bg-warning text-white">Próximos 3 Meses</div>
+                <div class="card-body">
+                    {% for dominio in dominios_proximos_3_meses %}
+                    <p>
+                        <strong>{{ dominio.nome }}</strong><br>
+                        {{ dominio.extensao }}<br>
+                        Expira em: {{ dominio.data_expiracao|date:"d/m/Y" }}
+                    </p>
+                    {% empty %}
+                    <p class="text-muted">Nenhum domínio expira em 3 meses.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Mais de 3 Meses -->
+            <div class="card border-success mb-4">
+                <div class="card-header bg-success text-white">Mais de 3 Meses</div>
+                <div class="card-body">
+                    {% for dominio in dominios_mais_tarde %}
+                    <p>
+                        <strong>{{ dominio.nome }}</strong><br>
+                        {{ dominio.extensao }}<br>
+                        Expira em: {{ dominio.data_expiracao|date:"d/m/Y" }}
+                    </p>
+                    {% empty %}
+                    <p class="text-muted">Nenhum domínio expira em mais de 3 meses.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

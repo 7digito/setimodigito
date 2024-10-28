@@ -4,23 +4,54 @@
 {% block title %}Lista de Tarefas{% endblock %}
 
 {% block content %}
-<h1 class="mt-4">Lista de Tarefas</h1>
+<link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
 
+<h1 class="mt-4" style="color: #ff6d00;">Lista de Tarefas</h1>
+<hr style="border-color: #ff6d00;"> <!-- Divisor abaixo do título -->
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+    <!-- Botão para adicionar uma nova tarefa -->
+    <a href="{% url 'adicionar_tarefa' %}" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Adicionar Tarefa
+    </a>
+
+    <!-- Formulário de pesquisa -->
+    <form action="{% url 'listar_tarefas' %}" method="get" class="form-inline">
+        <div class="input-group">
+            <!-- Campo de entrada para pesquisa -->
+            <input type="text" name="search" id="taskSearch" class="form-control" style="width: 300px;"
+                   placeholder="Pesquisar..." value="{{ search_query }}">
+
+            <!-- Botão para limpar ou pesquisar -->
+            <button class="btn" type="button" id="searchButton" style="background-color: #ff6d00; color: white;"
+                    onclick="clearSearch()">
+                {% if search_query %}
+                    Limpar
+                {% else %}
+                    Pesquisar
+                {% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Tabela de tarefas -->
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Cliente</th>
-            <th>Descrição</th>
-            <th>Estado</th>
-            <th>Prioridade</th>
-            <th>Ações</th>
+            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Cliente</th>
+            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Descrição</th>
+            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Estado</th>
+            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Prioridade</th>
+            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Ações</th>
         </tr>
     </thead>
     <tbody>
         {% for tarefa in tarefas %}
-        <tr>
+        <tr style="border-bottom: 1px solid #ff6d00;"> <!-- Linha com borda inferior laranja -->
             <td style="padding-top: 10px; vertical-align: middle;">{{ tarefa.cliente.nome }}</td>
             <td style="padding-top: 10px; vertical-align: middle;">{{ tarefa.descricao }}</td>
+<<<<<<< HEAD
             <td style="padding-top: 10px; vertical-align: middle;">
                 {% if tarefa.estado == 'pendente' %}
                     <span class="badge bg-warning text-dark">Pendente</span>
@@ -41,9 +72,31 @@
                     <span class="badge bg-secondary">Baixa</span>
                 {% endif %}
             </td>
+=======
+            <td style="padding-top: 10px; vertical-align: middle;">{{ tarefa.get_estado_display }}</td>
+>>>>>>> 3767c1f3e592245843178b9a70eba2ac651b6b90
             <td style="padding-top: 10px; vertical-align: middle;">
-                <a href="{% url 'editar_tarefa' tarefa.id %}" class="btn btn-sm btn-primary">Editar</a>
-                <a href="{% url 'apagar_tarefa' tarefa.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+                {% if tarefa.prioridade == 'alta' %}
+                    <span class="badge bg-danger">Alta</span>
+                {% elif tarefa.prioridade == 'media' %}
+                    <span class="badge bg-warning text-dark">Média</span>
+                {% elif tarefa.prioridade == 'baixa' %}
+                    <span class="badge bg-success">Baixa</span>
+                {% else %}
+                    <span class="badge bg-secondary">Indefinida</span>
+                {% endif %}
+            </td>
+            
+            <td style="padding-top: 10px; vertical-align: middle;">
+                <!-- Ícones de ação ao invés de texto -->
+                <a href="{% url 'editar_tarefa' tarefa.id %}" class="btn btn-sm btn-primary" title="Editar">
+                    <i class="bi bi-pencil" style="color: #ffffff;"></i>
+                </a>
+                <a href="#" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                   data-nome="{{ tarefa.descricao }}" data-id="{{ tarefa.id }}"
+                   onclick="setDeleteData('{{ tarefa.descricao }}', '{{ tarefa.id }}')" title="Eliminar">
+                    <i class="bi bi-trash" style="color: #ffffff;"></i>
+                </a>
             </td>
         </tr>
         {% empty %}
@@ -54,24 +107,91 @@
     </tbody>
 </table>
 
-<!-- Navegação da paginação, se estiver implementada -->
-<div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; Primeira</a>
-            <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
-        {% endif %}
+<!-- Navegação da paginação -->
+<div class="d-flex justify-content-center mb-4">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1&search={{ search_query }}" aria-label="Primeira" style="color: #ff6d00;">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}"
+                   aria-label="Anterior" style="color: #ff6d00;">
+                    <span aria-hidden="true">&#8249;</span>
+                </a>
+            </li>
+            {% endif %}
 
-        <span class="current">
-            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
-        </span>
+            {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+            <li class="page-item active" aria-current="page">
+                <span class="page-link" style="background-color: #ff6d00; color: white;">{{ num }}</span>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}&search={{ search_query }}" style="color: #ff6d00;">{{ num }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
 
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">Próxima</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
-        {% endif %}
-    </span>
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}"
+                   aria-label="Próxima" style="color: #ff6d00;">
+                    <span aria-hidden="true">&#8250;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&search={{ search_query }}"
+                   aria-label="Última" style="color: #ff6d00;">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
 </div>
 
-<a href="{% url 'adicionar_tarefa' %}" class="btn btn-success">Adicionar Tarefa</a>
+<!-- Modal de confirmação de eliminação -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #ff6d00;">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                Tem certeza que deseja eliminar a tarefa <strong id="tarefaNome"></strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" method="post" action="{% url 'apagar_tarefa' 0 %}" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="tarefa_id" id="tarefa_id">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Função para limpar o campo de pesquisa e enviar o formulário
+    function clearSearch() {
+        var searchField = document.getElementById('taskSearch');
+        searchField.value = ''; // Limpa o campo de pesquisa
+        searchField.form.submit(); // Envia o formulário
+    }
+
+    // Função para configurar os dados da tarefa a ser eliminada no modal
+    function setDeleteData(nome, id) {
+        document.getElementById('tarefaNome').textContent = nome; // Atualiza o nome da tarefa no modal
+        document.getElementById('tarefa_id').value = id; // Atualiza o id correto
+        document.getElementById('deleteForm').action = `{% url 'apagar_tarefa' 0 %}`.replace('0', id); // Define a ação do formulário
+    }
+</script>
+
 {% endblock %}

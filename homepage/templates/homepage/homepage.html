@@ -3,13 +3,13 @@
 {% block title %}Homepage{% endblock %}
 
 {% block content %}
-<div style="display: flex; padding: 40px 20px;">
+<div class="container mt-5">
 
-    <div style="flex: 2; padding-right: 20px; border-right: 1px solid #ccc;">
-        <h1>Bem-vindo à Homepage!</h1>
-        <p>Esta é a página inicial do seu projeto Django.</p>
-    </div>
+    <!-- Título e Descrição -->
+    <h1 style="font-family: 'Play', sans-serif; font-weight: 700; color: #FF6600; font-size: 3rem;">SÉTIMO DIGITO</h1>
+    <p class="lead" style="font-family: 'Play', sans-serif; font-size: 1.2em;">WEB AND DIGITAL SOLUTIONS</p>
 
+<<<<<<< HEAD
     <div style="flex: 1; padding-left: 20px;">
         <h2 style="font-size: 1.5rem;">Domínios a Expirar</h2>
         <table style="width: 100%; border-collapse: collapse;">
@@ -78,35 +78,9 @@
             </tbody>
         </table>
     </div>
+=======
+    <hr class="my-4">
+>>>>>>> 3767c1f3e592245843178b9a70eba2ac651b6b90
 
 </div>
-
-<!-- Estilo do Tooltip -->
-<style>
-    [data-tooltip] {
-        position: relative;
-        cursor: pointer; /* Muda o cursor para indicar que é interativo */
-    }
-
-    [data-tooltip]:hover::after {
-        content: attr(data-tooltip);
-        position: absolute;
-        left: 50%;
-        bottom: 100%; /* Posiciona o tooltip acima do elemento */
-        transform: translateX(-50%);
-        background: #333; /* Cor de fundo do tooltip */
-        color: #fff; /* Cor do texto do tooltip */
-        padding: 5px 10px;
-        border-radius: 4px;
-        white-space: nowrap; /* Evita que o texto quebre */
-        z-index: 1000;
-        opacity: 0.9; /* Transparência */
-        transition: opacity 0.2s; /* Animação ao aparecer */
-    }
-
-    [data-tooltip]:hover::after {
-        visibility: visible; /* Torna o tooltip visível */
-    }
-</style>
-
 {% endblock %}

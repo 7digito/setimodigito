@@ -1,43 +1,187 @@
 {% extends 'base.html' %}
-
 {% load static %}
+
 {% block title %}Lista de Domínios{% endblock %}
 
 {% block content %}
-
 <link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
 
-<h1 class="mt-4">Lista de Domínios</h1>
+<h1 class="mt-4" style="color: #ff6d00;">Lista de Domínios</h1>
+<hr style="border-color: #ff6d00;">
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+    <!-- Botão para adicionar um novo domínio -->
+    <a href="{% url 'adicionar_dominio' %}" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Adicionar
+    </a>
+
+    <!-- Formulário de pesquisa -->
+    <form action="{% url 'listar_dominios' %}" method="get" class="form-inline">
+        <div class="input-group">
+            <!-- Campo de entrada para pesquisa -->
+            <input type="text" name="search" id="domainSearch" class="form-control" style="width: 300px;"
+                   placeholder="Pesquisar..." value="{{ search_query }}">
+
+            <!-- Botão para limpar ou pesquisar -->
+            <button class="btn" type="button" id="searchButton" style="background-color: #ff6d00; color: white;"
+                    onclick="clearSearch()">
+                {% if search_query %}
+                    Limpar
+                {% else %}
+                    Pesquisar
+                {% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+    /* Estilos para as bordas das células da tabela */
+    .table th,
+    .table td {
+        border-bottom: 1px solid #ff6d00; /* Bordas laranja */
+        color: inherit; /* Mantém a cor original do texto */
+    }
+
+    /* Estilo para o fundo alternado das linhas da tabela */
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #ffd181; /* Fundo alternado */
+    }
+</style>
+
+<!-- Tabela de domínios -->
 <table class="table table-striped">
     <thead>
         <tr>
             <th>Nome</th>
             <th>Extensão</th>
-            <th>Cliente</th> <!-- Exibir o cliente associado -->
+            <th>Cliente</th>
             <th>Estado</th>
             <th>Data de Expiração</th>
-            <th>Antiguidade (anos)</th> <!-- Nova coluna para antiguidade -->
+            <th>Antiguidade (anos)</th>
             <th>Ações</th>
         </tr>
     </thead>
     <tbody>
-        {% for dominio in dominios %}
+        {% for dominio in page_obj %}
         <tr>
             <td>{{ dominio.nome }}</td>
             <td>{{ dominio.extensao }}</td>
-            <td>{{ dominio.cliente.nome }}</td> <!-- Exibir o nome do cliente -->
-            <td>{{ dominio.get_estado_display }}</td> <!-- Exibir o estado legível -->
-            <td>{{ dominio.data_expiracao|date:"d/m/Y" }}</td> <!-- Data de expiração formatada -->
-            <td>{{ dominio.antiguidade }}</td> <!-- Exibir antiguidade -->
+            <td>{{ dominio.cliente.nome }}</td>
+            <td>{{ dominio.get_estado_display }}</td>
+            <td>{{ dominio.data_expiracao|date:"d/m/Y" }}</td>
+            <td>{{ dominio.antiguidade }}</td>
             <td>
-                <a href="{% url 'editar_dominio' dominio.id %}" class="btn btn-sm btn-primary">Editar</a>
-                <a href="{% url 'excluir_dominio' dominio.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+                <!-- Botão para editar o domínio -->
+                <a href="{% url 'editar_dominio' dominio.id %}" class="btn btn-sm btn-primary">
+                    <i class="bi bi-pencil" style="color: #ffffff;"></i>
+                </a>
+                <!-- Botão para excluir o domínio, abre um modal de confirmação -->
+                <a href="#" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                   data-nome="{{ dominio.nome }}" data-id="{{ dominio.id }}"
+                   onclick="setDeleteData('{{ dominio.nome }}', '{{ dominio.id }}')">
+                    <i class="bi bi-trash" style="color: #ffffff;"></i>
+                </a>
+                <!-- Botão para ver detalhes do domínio -->
+                <a href="{% url 'detalhes_dominio' dominio.id %}" class="btn btn-sm btn-warning">
+                    <i class="bi bi-info-circle" style="color: #ffffff;"></i>
+                </a>
             </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7">Nenhum domínio encontrado.</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 
-<a href="{% url 'adicionar_dominio' %}" class="btn btn-success">Adicionar Domínio</a>
+<!-- Navegação da paginação -->
+<div class="d-flex justify-content-center mb-4">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1&search={{ search_query }}" aria-label="Primeira"
+                   style="color: #ff6d00;">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}"
+                   aria-label="Anterior" style="color: #ff6d00;">
+                    <span aria-hidden="true">&#8249;</span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+            <li class="page-item active" aria-current="page">
+                <span class="page-link" style="background-color: #ff6d00; color: white;">{{ num }}</span>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}&search={{ search_query }}" style="color: #ff6d00;">{{ num }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}"
+                   aria-label="Próxima" style="color: #ff6d00;">
+                    <span aria-hidden="true">&#8250;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&search={{ search_query }}"
+                   aria-label="Última" style="color: #ff6d00;">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+<!-- Modal de confirmação de eliminação -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #ff6d00;">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                Tem certeza que deseja eliminar o domínio <strong id="dominioNome"></strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" method="post" action="{% url 'excluir_dominio' 0 %}" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="dominio_id" id="dominio_id">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Função para limpar o campo de pesquisa e enviar o formulário
+    function clearSearch() {
+        var searchField = document.getElementById('domainSearch');
+        searchField.value = ''; // Limpa o campo de pesquisa
+        searchField.form.submit(); // Envia o formulário
+    }
+
+    // Função para configurar os dados do domínio a ser eliminado no modal
+    function setDeleteData(nome, id) {
+        document.getElementById('dominioNome').textContent = nome; // Atualiza o nome do domínio no modal
+        document.getElementById('dominio_id').value = id; // Atualiza o id correto
+        document.getElementById('deleteForm').action = `{% url 'excluir_dominio' 0 %}`.replace('0', id); // Define a ação do formulário
+    }
+</script>
 
 {% endblock %}

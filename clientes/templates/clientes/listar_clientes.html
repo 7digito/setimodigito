@@ -4,14 +4,56 @@
 {% block title %}Lista de Clientes{% endblock %}
 
 {% block content %}
-<h1 class="mt-4">Lista de Clientes</h1>
+<h1 class="mt-4" style="color: #ff6d00;">Lista de Clientes</h1>
+<hr style="border-color: #ff6d00;">
 
-<table class="table table-striped">
+<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+    <!-- Botão para adicionar um novo cliente -->
+    <a href="{% url 'adicionar_cliente' %}" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Adicionar Cliente
+    </a>
+    
+    <!-- Formulário de pesquisa -->
+    <form action="{% url 'listar_clientes' %}" method="get" class="form-inline">
+        <div class="input-group">
+            <!-- Campo de entrada para pesquisa -->
+            <input type="text" name="search" class="form-control" style="width: 300px;" 
+                   placeholder="Pesquisar..." id="clientSearch" value="{{ search_query }}">
+            
+            <!-- Botão de pesquisa que altera seu texto dependendo do conteúdo do campo -->
+            <button class="btn" type="button" id="searchButton" style="background-color: #ff6d00; color: white;" 
+                    onclick="clearSearch()">
+                {% if search_query %}
+                    Limpar
+                {% else %}
+                    Pesquisar
+                {% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+    /* Estilos para as bordas das células da tabela */
+    .table th,
+    .table td {
+        border-bottom: 1px solid #ff6d00; /* Bordas laranja */
+        color: inherit; /* Mantém a cor original do texto */
+    }
+
+    /* Estilo para o fundo alternado das linhas da tabela */
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #ffd181; /* Fundo alternado */
+    }
+</style>
+
+<!-- Tabela de clientes -->
+<table class="table table-striped" id="clientTable">
     <thead>
         <tr>
             <th>Nome</th>
-            <th>Morada</th>
             <th>NIF</th>
+            <th>Email</th>
             <th>Telefone</th>
             <th>Ações</th>
         </tr>
@@ -19,13 +61,25 @@
     <tbody>
         {% for cliente in page_obj %}
         <tr>
-            <td style="padding-top: 10px; vertical-align: middle;">{{ cliente.nome }}</td>  <!-- Adiciona espaço superior -->
-            <td style="padding-top: 10px; vertical-align: middle;">{{ cliente.morada }}</td> <!-- Adiciona espaço superior -->
-            <td style="padding-top: 10px; vertical-align: middle;">{{ cliente.nif }}</td> <!-- Adiciona espaço superior -->
-            <td style="padding-top: 10px; vertical-align: middle;">{{ cliente.telefone }}</td> <!-- Adiciona espaço superior -->
-            <td style="padding-top: 10px; vertical-align: middle;">
-                <a href="{% url 'editar_cliente' cliente.id %}" class="btn btn-sm btn-primary">Editar</a>
-                <a href="{% url 'apagar_cliente' cliente.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+            <td>{{ cliente.nome }}</td>
+            <td>{{ cliente.nif }}</td>
+            <td>{{ cliente.email }}</td>
+            <td>{{ cliente.telefone }}</td>
+            <td>
+                <!-- Botão para editar o cliente -->
+                <a href="{% url 'editar_cliente' cliente.id %}" class="btn btn-sm btn-primary">
+                    <i class="bi bi-pencil" style="color: #ffffff;"></i>
+                </a>
+                <!-- Botão para excluir o cliente, abre um modal de confirmação -->
+                <a href="#" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                   data-nome="{{ cliente.nome }}" data-id="{{ cliente.id }}"
+                   onclick="setDeleteData('{{ cliente.nome }}', '{{ cliente.id }}')">
+                    <i class="bi bi-trash" style="color: #ffffff;"></i>
+                </a>
+                <!-- Botão para ver detalhes do cliente -->
+                <a href="{% url 'detalhes_cliente' cliente.id %}" class="btn btn-sm btn-warning">
+                    <i class="bi bi-info-circle" style="color: #ffffff;"></i>
+                </a>
             </td>
         </tr>
         {% empty %}
@@ -37,23 +91,87 @@
 </table>
 
 <!-- Navegação da paginação -->
-<div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; Primeira</a>
-            <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
-        {% endif %}
+<div class="d-flex justify-content-center mb-4">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1&search={{ search_query }}" aria-label="Primeira" style="color: #ff6d00;">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}" aria-label="Anterior" style="color: #ff6d00;">
+                    <span aria-hidden="true">&#8249;</span>
+                </a>
+            </li>
+            {% endif %}
 
-        <span class="current">
-            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
-        </span>
+            {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+            <li class="page-item active" aria-current="page">
+                <span class="page-link" style="background-color: #ff6d00; color: white;">{{ num }}</span>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}&search={{ search_query }}" style="color: #ff6d00;">{{ num }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
 
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">Próxima</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
-        {% endif %}
-    </span>
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}" aria-label="Próxima" style="color: #ff6d00;">
+                    <span aria-hidden="true">&#8250;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&search={{ search_query }}" aria-label="Última" style="color: #ff6d00;">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
 </div>
 
-<a href="{% url 'adicionar_cliente' %}" class="btn btn-success">Adicionar Cliente</a>
+<!-- Modal de confirmação de eliminação -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #ff6d00;">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                Tem certeza que deseja eliminar o cliente <strong id="clienteNome"></strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" method="post" action="{% url 'apagar_cliente' 0 %}" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="client_id" id="client_id">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Função para limpar o campo de pesquisa e enviar o formulário
+    function clearSearch() {
+        var searchField = document.getElementById('clientSearch');
+        searchField.value = ''; // Limpa o campo de pesquisa
+        searchField.form.submit(); // Envia o formulário
+    }
+
+    // Função para configurar os dados do cliente a ser eliminado no modal
+    function setDeleteData(nome, id) {
+        document.getElementById('clienteNome').textContent = nome; // Atualiza o nome do cliente no modal
+        document.getElementById('client_id').value = id; // Atualiza o id correto
+        document.getElementById('deleteForm').action = `{% url 'apagar_cliente' 0 %}`.replace('0', id); // Define a ação do formulário
+    }
+</script>
+
 {% endblock %}
