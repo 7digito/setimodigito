@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Lista de Propostas{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
+
+<h1 class="mt-4" style="color: #ff6d00;">Lista de Propostas</h1>
+<hr style="border-color: #ff6d00;">
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+    <a href="{% url 'trabalhos:proposta_create' %}" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Adicionar Proposta
+    </a>
+
+    <form action="{% url 'trabalhos:propostas_list' %}" method="get" class="form-inline">
+        <div class="input-group">
+            <input type="text" name="search" id="proposalSearch" class="form-control" style="width: 300px;"
+                   placeholder="Pesquisar..." value="{{ search_query }}">
+            <button class="btn" type="button" id="searchButton" style="background-color: #ff6d00; color: white;"
+                    onclick="clearSearch()">
+                {% if search_query %}
+                    Limpar
+                {% else %}
+                    Pesquisar
+                {% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Tabela de propostas -->
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Cliente</th>
+            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Título</th>
+            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Descrição</th>
+            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Estado</th>
+            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Prazo</th>
+            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Ações</th>
+            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Detalhes</th> <!-- Nova coluna para detalhes -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for proposta in propostas %}
+        <tr style="border-bottom: 1px solid #ff6d00;">
+            <td style="padding-top: 10px; vertical-align: middle;">{{ proposta.cliente.nome }}</td>
+            <td style="padding-top: 10px; vertical-align: middle;">{{ proposta.titulo }}</td>
+            <td style="padding-top: 10px; vertical-align: middle;">{{ proposta.descricao }}</td>
+            <td style="padding-top: 10px; vertical-align: middle;">
+                <span class="badge {% if proposta.estado == 'solicitada' %}bg-warning text-dark
+                                 {% elif proposta.estado == 'em_processo' %}bg-info text-dark
+                                 {% elif proposta.estado == 'entregue' %}bg-success
+                                 {% elif proposta.estado == 'aprovada' %}bg-primary
+                                 {% else %}bg-secondary{% endif %}">
+                    {{ proposta.get_estado_display }}
+                </span>
+            </td>
+            <td style="padding-top: 10px; vertical-align: middle;">{{ proposta.prazo }}</td>
+            <td style="padding-top: 10px; vertical-align: middle;">
+                <a href="{% url 'trabalhos:proposta_update' proposta.id %}" class="btn btn-sm btn-primary" title="Editar">
+                    <i class="bi bi-pencil" style="color: #ffffff;"></i>
+                </a>
+                <a href="#" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                   data-nome="{{ proposta.titulo }}" data-id="{{ proposta.id }}"
+                   onclick="setDeleteData('{{ proposta.titulo }}', '{{ proposta.id }}')" title="Eliminar">
+                    <i class="bi bi-trash" style="color: #ffffff;"></i>
+                </a>
+            </td>
+            <td style="padding-top: 10px; vertical-align: middle;">
+                <a href="{% url 'trabalhos:proposta_detail' proposta.id %}" class="btn btn-sm btn-info" title="Ver Detalhes">
+                    <i class="bi bi-eye" style="color: #ffffff;"></i> <!-- Ícone para ver detalhes -->
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7">Nenhuma proposta encontrada.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Navegação da paginação -->
+<div class="d-flex justify-content-center mb-4">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1&search={{ search_query }}" aria-label="Primeira" style="color: #ff6d00;">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}"
+                   aria-label="Anterior" style="color: #ff6d00;">
+                    <span aria-hidden="true">&#8249;</span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+            <li class="page-item active" aria-current="page">
+                <span class="page-link" style="background-color: #ff6d00; color: white;">{{ num }}</span>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}&search={{ search_query }}" style="color: #ff6d00;">{{ num }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}"
+                   aria-label="Próxima" style="color: #ff6d00;">
+                    <span aria-hidden="true">&#8250;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&search={{ search_query }}"
+                   aria-label="Última" style="color: #ff6d00;">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+<!-- Modal de confirmação de eliminação -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #ff6d00;">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Eliminação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                Tem certeza que deseja eliminar a proposta <strong id="propostaNome"></strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" method="post" action="{% url 'trabalhos:proposta_delete' 0 %}" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="proposta_id" id="proposta_id">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function clearSearch() {
+        var searchField = document.getElementById('proposalSearch');
+        searchField.value = '';
+        searchField.form.submit();
+    }
+
+    function setDeleteData(nome, id) {
+        document.getElementById('propostaNome').textContent = nome;
+        document.getElementById('proposta_id').value = id;
+        document.getElementById('deleteForm').action = `{% url 'trabalhos:proposta_delete' 0 %}`.replace('0', id);
+    }
+</script>
+
+{% endblock %}

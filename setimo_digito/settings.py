@@ -42,7 +42,11 @@ INSTALLED_APPS = [
     'dominios',
     'tarefas',
     'trabalhos',
+    'crispy_forms',
+    'crispy_bootstrap4',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'  # ou 'bootstrap5', dependendo do que você estiver usando
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

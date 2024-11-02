@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ form.instance.id|yesno:"Editar Proposta,Adicionar Proposta" }}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
+
+<h1 class="mt-4" style="color: #ff6d00;">
+    {{ form.instance.id|yesno:"Editar Proposta,Adicionar Proposta" }}
+</h1>
+<hr style="border-color: #ff6d00;"> <!-- Divisor abaixo do título -->
+
+<div class="card mt-4">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Campo para selecionar o cliente -->
+            <div class="mb-3">
+                <label for="id_cliente" class="form-label" style="color: #ff6d00;">Cliente</label>
+                {{ form.cliente|as_crispy_field }}
+            </div>
+
+            <!-- Campo para o título -->
+            <div class="mb-3">
+                <label for="id_titulo" class="form-label" style="color: #ff6d00;">Título</label>
+                {{ form.titulo|as_crispy_field }}
+            </div>
+
+            <!-- Campo para a descrição -->
+            <div class="mb-3">
+                <label for="id_descricao" class="form-label" style="color: #ff6d00;">Descrição</label>
+                {{ form.descricao|as_crispy_field }}
+            </div>
+
+            <!-- Campo para o prazo -->
+            <div class="mb-3">
+                <label for="id_prazo" class="form-label" style="color: #ff6d00;">Prazo</label>
+                {{ form.prazo|as_crispy_field }}
+            </div>
+
+            <!-- Campo para o estado -->
+            <div class="mb-3">
+                <label for="id_estado" class="form-label" style="color: #ff6d00;">Estado</label>
+                {{ form.estado|as_crispy_field }}
+            </div>
+
+            <!-- Campo para upload de PDF -->
+            <div class="mb-3">
+                <label for="id_pdf" class="form-label" style="color: #ff6d00;">Arquivo PDF</label>
+                {{ form.pdf|as_crispy_field }}  <!-- Verifique se 'pdf' está correto -->
+                <small class="text-muted">Faça upload de um arquivo PDF opcional.</small>
+            </div>
+
+            <!-- Botão de submissão -->
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-check-circle"></i> Salvar
+                </button>
+                <a href="{% url 'trabalhos:propostas_list' %}" class="btn btn-secondary ms-2">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

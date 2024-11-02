@@ -7,4 +7,5 @@ urlpatterns = [
     path('clientes/', include('clientes.urls')),  # URLs da app clientes
     path('tarefas/', include('tarefas.urls')),  # URLs da app tarefas
     path('dominios/', include('dominios.urls')),  # Incluindo as URLs da app dominios
+    path('trabalhos/', include('trabalhos.urls')),  # Inclua as URLs da app 'trabalhos'
 ]
