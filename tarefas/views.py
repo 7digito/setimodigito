@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt  # Temporariamente para teste
 from django.contrib import messages
 from .models import Tarefa
 from .forms import TarefaForm
@@ -53,18 +54,41 @@ def apagar_tarefa(request, tarefa_id):
         return redirect('listar_tarefas')
     return render(request, 'tarefas/apagar_tarefa.html', {'tarefa': tarefa})
 
+@csrf_exempt  # Adicione isso temporariamente para testar se é um problema de CSRF
 def update_task_status(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
+            data = json.loads(request.body.decode('utf-8'))  # Decode o body primeiro
             task_id = data.get('task_id')
             new_status = data.get('new_status')
+            
+            print(f"Dados recebidos: {data}")  # Para debug
+            
+            if not task_id or not new_status:
+                return JsonResponse({
+                    'error': 'Task ID and new status are required'
+                }, status=400)
 
-            tarefa = get_object_or_404(Tarefa, id=task_id)
+            tarefa = Tarefa.objects.get(id=task_id)
             tarefa.estado = new_status
             tarefa.save()
 
-            return JsonResponse({'new_status': new_status})
+            return JsonResponse({
+                'success': True,
+                'message': 'Status atualizado com sucesso'
+            })
+
+        except json.JSONDecodeError as e:
+            print(f"Erro de JSON: {str(e)}")  # Para debug
+            return JsonResponse({
+                'error': f'Invalid JSON: {str(e)}'
+            }, status=400)
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+            print(f"Erro: {str(e)}")  # Para debug
+            return JsonResponse({
+                'error': str(e)
+            }, status=500)
+
+    return JsonResponse({
+        'error': 'Method not allowed'
+    }, status=405)

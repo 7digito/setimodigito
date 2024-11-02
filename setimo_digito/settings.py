@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'homepage',
     'dominios',
     'tarefas',
+    'trabalhos',
 ]
 
 MIDDLEWARE = [
