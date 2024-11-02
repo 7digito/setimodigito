@@ -9,7 +9,78 @@
     <h1 style="font-family: 'Play', sans-serif; font-weight: 700; color: #FF6600; font-size: 3rem;">SÉTIMO DIGITO</h1>
     <p class="lead" style="font-family: 'Play', sans-serif; font-size: 1.2em;">WEB AND DIGITAL SOLUTIONS</p>
 
+<<<<<<< HEAD
+    <div style="flex: 1; padding-left: 20px;">
+        <h2 style="font-size: 1.5rem;">Domínios a Expirar</h2>
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="padding: 8px; font-size: 0.9rem;">Nome</th>
+                    <th style="padding: 8px; font-size: 0.9rem;">Extensão</th>
+                    <th style="padding: 8px; font-size: 0.9rem;">Data de Expiração</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dominio in proximos_dominios %}
+                <tr>
+                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ dominio.nome }}</td>
+                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ dominio.extensao }}</td>
+                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">{{ dominio.data_expiracao|date:"d/m/Y" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <hr style="border: 1px solid #ccc; margin: 20px 0;">
+
+        <h2 style="font-size: 1.5rem;">Últimas Tarefas</h2>
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="padding: 8px; font-size: 0.9rem;">Descrição</th>
+                    <th style="padding: 8px; font-size: 0.9rem;">Estado</th>
+                    <th style="padding: 8px; font-size: 0.9rem;">Prioridade</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tarefa in ultimas_tarefas %}
+                <tr>
+                    <td 
+                        style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;"
+                        data-tooltip="{{ tarefa.cliente.nome }}"  <!-- Armazena o nome do cliente no atributo data-tooltip -->
+                    >{{ tarefa.descricao }}</td>
+                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">
+                        {% if tarefa.estado == 'pendente' %}
+                            <span class="badge bg-warning text-dark">Pendente</span>
+                        {% elif tarefa.estado == 'em_andamento' %}
+                            <span class="badge bg-info text-dark">Em Andamento</span>
+                        {% elif tarefa.estado == 'concluida' %}
+                            <span class="badge bg-success">Concluída</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Outro Estado</span>
+                        {% endif %}
+                    </td>
+                    <td style="border-top: 1px solid #ccc; padding: 8px; font-size: 0.9rem;">
+                        {% if tarefa.prioridade == 'alta' %}
+                            <span class="badge bg-danger">Alta</span>
+                        {% elif tarefa.prioridade == 'media' %}
+                            <span class="badge bg-warning text-dark">Média</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Baixa</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" style="text-align: center; padding: 8px; font-size: 0.9rem;">Nenhuma tarefa encontrada.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+=======
     <hr class="my-4">
+>>>>>>> 3767c1f3e592245843178b9a70eba2ac651b6b90
 
 </div>
 {% endblock %}

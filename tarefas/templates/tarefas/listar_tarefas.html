@@ -51,7 +51,30 @@
         <tr style="border-bottom: 1px solid #ff6d00;"> <!-- Linha com borda inferior laranja -->
             <td style="padding-top: 10px; vertical-align: middle;">{{ tarefa.cliente.nome }}</td>
             <td style="padding-top: 10px; vertical-align: middle;">{{ tarefa.descricao }}</td>
+<<<<<<< HEAD
+            <td style="padding-top: 10px; vertical-align: middle;">
+                {% if tarefa.estado == 'pendente' %}
+                    <span class="badge bg-warning text-dark">Pendente</span>
+                {% elif tarefa.estado == 'em_andamento' %}
+                    <span class="badge bg-info text-dark">Em Andamento</span>
+                {% elif tarefa.estado == 'concluida' %}
+                    <span class="badge bg-success">Concluída</span>
+                {% else %}
+                    <span class="badge bg-secondary">Outro Estado</span>
+                {% endif %}
+            </td>
+            <td style="padding-top: 10px; vertical-align: middle;">
+                {% if tarefa.prioridade == 'alta' %}
+                    <span class="badge bg-danger">Alta</span>
+                {% elif tarefa.prioridade == 'media' %}
+                    <span class="badge bg-warning text-dark">Média</span>
+                {% else %}
+                    <span class="badge bg-secondary">Baixa</span>
+                {% endif %}
+            </td>
+=======
             <td style="padding-top: 10px; vertical-align: middle;">{{ tarefa.get_estado_display }}</td>
+>>>>>>> 3767c1f3e592245843178b9a70eba2ac651b6b90
             <td style="padding-top: 10px; vertical-align: middle;">
                 {% if tarefa.prioridade == 'alta' %}
                     <span class="badge bg-danger">Alta</span>
