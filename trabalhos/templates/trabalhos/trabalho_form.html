@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {{ form.instance.id|yesno:"Editar Trabalho,Adicionar Trabalho" }}
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
+
+<h1 class="mt-4" style="color: #ff6d00;">
+    {{ form.instance.id|yesno:"Editar Trabalho,Adicionar Trabalho" }}
+</h1>
+<hr style="border-color: #ff6d00;"> <!-- Divisor abaixo do título -->
+
+<div class="container" style="max-width: 75%;">
+    <div class="card mt-4">
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        <ul>
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <div class="row mb-3">
+                    <!-- Campo para selecionar o cliente (2/3) -->
+                    <div class="col-md-8">
+                        <label for="id_cliente" class="form-label" style="color: #ff6d00;">Cliente</label>
+                        {{ form.cliente|as_crispy_field }}
+                        {% if form.cliente.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.cliente.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Campo para tipo de trabalho (1/3) -->
+                    <div class="col-md-4">
+                        <label for="id_tipo_trabalho" class="form-label" style="color: #ff6d00;">Tipo de Trabalho</label>
+                        {{ form.tipo_trabalho|as_crispy_field }}
+                        {% if form.tipo_trabalho.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.tipo_trabalho.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <!-- Campo para o título (2/4) -->
+                    <div class="col-md-6">
+                        <label for="id_titulo" class="form-label" style="color: #ff6d00;">Título</label>
+                        {{ form.titulo|as_crispy_field }}
+                        {% if form.titulo.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.titulo.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Campo para a data de início (1/4) -->
+                    <div class="col-md-3">
+                        <label for="id_data_inicio" class="form-label" style="color: #ff6d00;">Data de Início</label>
+                        {{ form.data_inicio|as_crispy_field }}
+                        {% if form.data_inicio.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.data_inicio.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Campo para o prazo (1/4) -->
+                    <div class="col-md-3">
+                        <label for="id_prazo" class="form-label" style="color: #ff6d00;">Prazo (dias)</label> <!-- Alterado para indicar que é em dias -->
+                        {{ form.prazo|as_crispy_field }}
+                        {% if form.prazo.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.prazo.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <!-- Campo para a descrição (full width) -->
+                    <div class="col-12">
+                        <label for="id_descricao" class="form-label" style="color: #ff6d00;">Descrição</label>
+                        {{ form.descricao|as_crispy_field }}
+                        {% if form.descricao.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.descricao.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <!-- Campo para prioridade (1/4) -->
+                    <div class="col-md-3">
+                        <label for="id_prioridade" class="form-label" style="color: #ff6d00;">Prioridade</label>
+                        {{ form.prioridade|as_crispy_field }}
+                        {% if form.prioridade.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.prioridade.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Campo para o estado (apenas ao editar, 1/4) -->
+                    {% if form.instance.id %}
+                        <div class="col-md-3">
+                            <label for="id_estado_trabalho" class="form-label" style="color: #ff6d00;">Estado</label>
+                            {{ form.estado_trabalho|as_crispy_field }}
+                            {% if form.estado_trabalho.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.estado_trabalho.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <!-- Campo para o estado, se adicionando novo (obrigatório) -->
+                        <div class="col-md-3">
+                            <label for="id_estado_trabalho" class="form-label" style="color: #ff6d00;">Estado</label>
+                            {{ form.estado_trabalho|as_crispy_field }}
+                            {% if form.estado_trabalho.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.estado_trabalho.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    <!-- Campo para indicar se teve proposta (1/4) -->
+                    <div class="col-md-3">
+                        <label for="id_teve_proposta" class="form-label" style="color: #ff6d00;">Teve Proposta?</label>
+                        {{ form.teve_proposta|as_crispy_field }}
+                        {% if form.teve_proposta.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.teve_proposta.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Campo para número da proposta (1/4) -->
+                    <div class="col-md-3">
+                        <label for="id_numero_proposta" class="form-label" style="color: #ff6d00;">Número da Proposta</label>
+                        {{ form.numero_proposta|as_crispy_field }}
+                        {% if form.numero_proposta.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.numero_proposta.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <!-- Campo para upload de PDF (full width) -->
+                    <div class="col-12">
+                        <label for="id_pdf_proposta" class="form-label" style="color: #ff6d00;">Arquivo PDF</label>
+                        {{ form.pdf_proposta|as_crispy_field }}
+                        <small class="text-muted">Faça upload de um arquivo PDF opcional.</small>
+                        {% if form.pdf_proposta.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.pdf_proposta.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Link para visualizar o PDF atual, se existir -->
+                {% if form.instance.pdf_proposta %}
+                    <div class="mb-3">
+                        <a href="{{ form.instance.pdf_proposta.url }}" target="_blank" class="btn btn-link" style="color: #ff6d00;">
+                            Ver PDF atual
+                        </a>
+                    </div>
+                {% endif %}
+
+                <!-- Botões de submissão e cancelamento -->
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-success" aria-label="Salvar trabalho">
+                        <i class="bi bi-check-circle"></i> Salvar
+                    </button>
+                    <a href="{% url 'trabalhos:trabalhos_list' %}" class="btn btn-secondary ms-2" aria-label="Cancelar e voltar à lista">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

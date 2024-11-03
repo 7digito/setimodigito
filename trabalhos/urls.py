@@ -1,11 +1,12 @@
 from django.urls import path
 from . import views
 
-app_name = 'trabalhos'
+app_name = 'trabalhos'  # Nome do aplicativo para o namespace
+
 urlpatterns = [
-    path('propostas/', views.propostas_list, name='propostas_list'),
-    path('propostas/<int:pk>/', views.proposta_detail, name='proposta_detail'),
-    path('propostas/new/', views.proposta_create, name='proposta_create'),
-    path('propostas/<int:pk>/edit/', views.proposta_update, name='proposta_update'),
-    path('propostas/<int:pk>/delete/', views.proposta_delete, name='proposta_delete'),
+    path('', views.trabalhos_list, name='trabalhos_list'),  # Lista de trabalhos acessível em /trabalhos/
+    path('<int:pk>/', views.trabalho_detail, name='trabalho_detail'),  # Detalhes de um trabalho em /trabalhos/<id>/
+    path('new/', views.trabalho_create, name='trabalho_create'),  # Criar novo trabalho em /trabalhos/new/
+    path('<int:pk>/edit/', views.trabalho_update, name='trabalho_update'),  # Editar trabalho em /trabalhos/<id>/edit/
+    path('<int:pk>/delete/', views.trabalho_delete, name='trabalho_delete'),  # Excluir trabalho em /trabalhos/<id>/delete/
 ]

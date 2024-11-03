@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalhes do Trabalho{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
+
+<h1 class="mt-4" style="color: #ff6d00;">Detalhes do Trabalho</h1>
+<hr style="border-color: #ff6d00;">
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="{% url 'trabalhos:trabalhos_list' %}" class="btn btn-secondary" aria-label="Voltar à lista de trabalhos">
+        <i class="bi bi-arrow-left"></i> Voltar
+    </a>
+    <div>
+        <a href="{% url 'trabalhos:trabalho_update' trabalho.id %}" class="btn btn-primary" aria-label="Editar trabalho">
+            <i class="bi bi-pencil"></i> Editar
+        </a>
+        <form action="{% url 'trabalhos:trabalho_delete' trabalho.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger" style="box-shadow: none;" onclick="return confirm('Tem certeza que deseja eliminar este trabalho?');" aria-label="Eliminar trabalho">
+                <i class="bi bi-trash"></i> Eliminar
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <!-- Campo do cliente -->
+        <div class="mb-3">
+            <label class="form-label" style="color: #ff6d00; font-weight: bold;">Cliente</label>
+            <p>{{ trabalho.cliente.nome }}</p>
+        </div>
+        
+        <!-- Campo do título -->
+        <div class="mb-3">
+            <label class="form-label" style="color: #ff6d00; font-weight: bold;">Título</label>
+            <p>{{ trabalho.titulo }}</p>
+        </div>
+
+        <!-- Campo da descrição -->
+        <div class="mb-3">
+            <label class="form-label" style="color: #ff6d00; font-weight: bold;">Descrição</label>
+            <p style="white-space: pre-wrap;">{{ trabalho.descricao }}</p>
+        </div>
+
+        <!-- Campo do prazo -->
+        <div class="mb-3">
+            <label class="form-label" style="color: #ff6d00; font-weight: bold;">Prazo (dias)</label>
+            <p>{{ trabalho.prazo }}</p>
+        </div>
+
+        <!-- Campo do estado -->
+        <div class="mb-3">
+            <label class="form-label" style="color: #ff6d00; font-weight: bold;">Estado</label>
+            <p>{{ trabalho.get_estado_display }}</p>
+        </div>
+
+        <!-- Link para o PDF -->
+        <div class="mb-3">
+            <label class="form-label" style="color: #ff6d00; font-weight: bold;">PDF</label>
+            {% if trabalho.pdf %}
+                <p><a href="{{ trabalho.pdf.url }}" target="_blank" aria-label="Visualizar PDF do trabalho">Ver PDF</a></p>
+            {% else %}
+                <p>Nenhum PDF disponível.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Pré-visualização do PDF -->
+    <div class="col-md-6">
+        <h4>Pré-visualização do PDF</h4>
+        {% if trabalho.pdf %}
+            <iframe src="{{ trabalho.pdf.url }}" style="width: 100%; height: 400px; border: none;" title="Pré-visualização do PDF"></iframe>
+        {% else %}
+            <p>Nenhum PDF disponível para visualização.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

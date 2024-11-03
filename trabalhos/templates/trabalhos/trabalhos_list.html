@@ -1,22 +1,22 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Lista de Propostas{% endblock %}
+{% block title %}Lista de Trabalhos{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
 
-<h1 class="mt-4" style="color: #ff6d00;">Lista de Propostas</h1>
+<h1 class="mt-4" style="color: #ff6d00;">Lista de Trabalhos</h1>
 <hr style="border-color: #ff6d00;">
 
 <div class="d-flex justify-content-between align-items-center mb-4 mt-4">
-    <a href="{% url 'trabalhos:proposta_create' %}" class="btn btn-success">
-        <i class="bi bi-plus-circle"></i> Adicionar Proposta
+    <a href="{% url 'trabalhos:trabalho_create' %}" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Adicionar Trabalho
     </a>
 
-    <form action="{% url 'trabalhos:propostas_list' %}" method="get" class="form-inline">
+    <form action="{% url 'trabalhos:trabalhos_list' %}" method="get" class="form-inline">
         <div class="input-group">
-            <input type="text" name="search" id="proposalSearch" class="form-control" style="width: 300px;"
+            <input type="text" name="search" id="trabalhoSearch" class="form-control" style="width: 300px;"
                    placeholder="Pesquisar..." value="{{ search_query }}">
             <button class="btn" type="button" id="searchButton" style="background-color: #ff6d00; color: white;"
                     onclick="clearSearch()">
@@ -30,54 +30,62 @@
     </form>
 </div>
 
-<!-- Tabela de propostas -->
+<!-- Tabela de trabalhos -->
 <table class="table table-striped">
     <thead>
         <tr>
+            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">ID</th>
             <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Cliente</th>
             <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Título</th>
-            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Descrição</th>
+            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Prioridade</th>
             <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Estado</th>
             <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Prazo</th>
             <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Ações</th>
-            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Detalhes</th> <!-- Nova coluna para detalhes -->
+            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Detalhes</th>
         </tr>
     </thead>
     <tbody>
-        {% for proposta in propostas %}
+        {% for trabalho in trabalhos %}
         <tr style="border-bottom: 1px solid #ff6d00;">
-            <td style="padding-top: 10px; vertical-align: middle;">{{ proposta.cliente.nome }}</td>
-            <td style="padding-top: 10px; vertical-align: middle;">{{ proposta.titulo }}</td>
-            <td style="padding-top: 10px; vertical-align: middle;">{{ proposta.descricao }}</td>
+            <td style="padding-top: 10px; vertical-align: middle; font-weight: bold;">{{ trabalho.numero_proposta }}</td>
+            <td style="padding-top: 10px; vertical-align: middle;">{{ trabalho.cliente.nome }}</td>
+            <td style="padding-top: 10px; vertical-align: middle;">{{ trabalho.titulo }}</td>
             <td style="padding-top: 10px; vertical-align: middle;">
-                <span class="badge {% if proposta.estado == 'solicitada' %}bg-warning text-dark
-                                 {% elif proposta.estado == 'em_processo' %}bg-info text-dark
-                                 {% elif proposta.estado == 'entregue' %}bg-success
-                                 {% elif proposta.estado == 'aprovada' %}bg-primary
-                                 {% else %}bg-secondary{% endif %}">
-                    {{ proposta.get_estado_display }}
+                <span class="badge {% if trabalho.prioridade == 'baixa' %}bg-success
+                                    {% elif trabalho.prioridade == 'media' %}bg-warning
+                                    {% elif trabalho.prioridade == 'alta' %}bg-danger
+                                    {% else %}bg-secondary{% endif %}">
+                    {{ trabalho.get_prioridade_display }}
                 </span>
             </td>
-            <td style="padding-top: 10px; vertical-align: middle;">{{ proposta.prazo }}</td>
             <td style="padding-top: 10px; vertical-align: middle;">
-                <a href="{% url 'trabalhos:proposta_update' proposta.id %}" class="btn btn-sm btn-primary" title="Editar">
+                <span class="badge {% if trabalho.estado == 'standby' %}bg-warning text-dark
+                                    {% elif trabalho.estado == 'initiated' %}bg-info text-dark
+                                    {% elif trabalho.estado == 'completed' %}bg-success
+                                    {% else %}bg-secondary{% endif %}">
+                    {{ trabalho.get_estado_display }}
+                </span>
+            </td>
+            <td style="padding-top: 10px; vertical-align: middle;">{{ trabalho.prazo }}</td>
+            <td style="padding-top: 10px; vertical-align: middle;">
+                <a href="{% url 'trabalhos:trabalho_update' trabalho.id %}" class="btn btn-sm btn-primary" title="Editar">
                     <i class="bi bi-pencil" style="color: #ffffff;"></i>
                 </a>
                 <a href="#" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                   data-nome="{{ proposta.titulo }}" data-id="{{ proposta.id }}"
-                   onclick="setDeleteData('{{ proposta.titulo }}', '{{ proposta.id }}')" title="Eliminar">
+                   data-nome="{{ trabalho.id }}" data-id="{{ trabalho.id }}"
+                   onclick="setDeleteData('{{ trabalho.id }}', '{{ trabalho.id }}')" title="Eliminar">
                     <i class="bi bi-trash" style="color: #ffffff;"></i>
                 </a>
             </td>
             <td style="padding-top: 10px; vertical-align: middle;">
-                <a href="{% url 'trabalhos:proposta_detail' proposta.id %}" class="btn btn-sm btn-info" title="Ver Detalhes">
-                    <i class="bi bi-eye" style="color: #ffffff;"></i> <!-- Ícone para ver detalhes -->
+                <a href="{% url 'trabalhos:trabalho_detail' trabalho.id %}" class="btn btn-sm btn-info" title="Ver Detalhes">
+                    <i class="bi bi-eye" style="color: #ffffff;"></i>
                 </a>
             </td>
         </tr>
         {% empty %}
         <tr>
-            <td colspan="7">Nenhuma proposta encontrada.</td>
+            <td colspan="8">Nenhum trabalho encontrado.</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -140,13 +148,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
             </div>
             <div class="modal-body">
-                Tem certeza que deseja eliminar a proposta <strong id="propostaNome"></strong>?
+                Tem certeza que deseja eliminar o trabalho com ID <strong id="trabalhoNome"></strong>?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <form id="deleteForm" method="post" action="{% url 'trabalhos:proposta_delete' 0 %}" style="display: inline;">
+                <form id="deleteForm" method="post" action="{% url 'trabalhos:trabalho_delete' 0 %}" style="display: inline;">
                     {% csrf_token %}
-                    <input type="hidden" name="proposta_id" id="proposta_id">
+                    <input type="hidden" name="trabalho_id" id="trabalho_id">
                     <button type="submit" class="btn btn-danger">Eliminar</button>
                 </form>
             </div>
@@ -155,16 +163,17 @@
 </div>
 
 <script>
+    // Função para limpar o campo de busca
     function clearSearch() {
-        var searchField = document.getElementById('proposalSearch');
+        var searchField = document.getElementById('trabalhoSearch');
         searchField.value = '';
         searchField.form.submit();
     }
 
+    // Função para configurar os dados do modal de eliminação
     function setDeleteData(nome, id) {
-        document.getElementById('propostaNome').textContent = nome;
-        document.getElementById('proposta_id').value = id;
-        document.getElementById('deleteForm').action = `{% url 'trabalhos:proposta_delete' 0 %}`.replace('0', id);
+        document.getElementById('trabalhoNome').innerText = nome;
+        document.getElementById('trabalho_id').value = id;
     }
 </script>
 

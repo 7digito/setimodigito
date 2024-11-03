@@ -1,30 +1,31 @@
 from django import forms
-from .models import Proposta
+from .models import Trabalho
 
-class PropostaForm(forms.ModelForm):
+class TrabalhoForm(forms.ModelForm):
+    """Formulário para o modelo Trabalho."""
+    
     class Meta:
-        model = Proposta
-        fields = ['cliente', 'titulo', 'descricao', 'prazo', 'estado', 'pdf']
+        model = Trabalho
+        fields = [
+            'cliente', 'titulo', 'descricao', 'data_inicio', 
+            'prazo', 'tipo_trabalho', 'prioridade', 
+            'estado_trabalho', 'teve_proposta', 
+            'numero_proposta', 'pdf_proposta'
+        ]
         widgets = {
             'descricao': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Digite a descrição...'}),
-            'prazo': forms.DateInput(attrs={'type': 'date', 'placeholder': 'Selecione uma data'}),
-            'pdf': forms.ClearableFileInput(attrs={'accept': 'application/pdf'}),
+            'data_inicio': forms.DateInput(attrs={'type': 'date', 'placeholder': 'Selecione a data de início'}),
+            'prazo': forms.NumberInput(attrs={'placeholder': 'Digite o prazo em dias', 'min': 0}),  # Alterado para NumberInput
+            'pdf_proposta': forms.ClearableFileInput(attrs={'accept': 'application/pdf'}),
         }
-
-    def __init__(self, *args, **kwargs):
-        super(PropostaForm, self).__init__(*args, **kwargs)
-        self.fields['cliente'].empty_label = "Selecione um cliente"
+        labels = {
+            'teve_proposta': 'Teve Proposta?',
+            'numero_proposta': 'Número da Proposta',
+            'pdf_proposta': 'Arquivo PDF',  # Label atualizado para consistência
+        }
         
-        # Set initial state for new proposals
-        if self.instance and self.instance.pk:  # If it's an existing instance
-            self.fields['estado'].widget.attrs['readonly'] = True  # Make the state field read-only for existing instances
-        else:
-            self.fields['estado'].initial = 'solicitada'  # Default to 'solicitada' for new proposals
-
-    def clean_estado(self):
-        """
-        Prevent changes to estado if the proposal is already created.
-        """
-        if self.instance and self.instance.pk:  # Existing proposal
-            return self.instance.estado  # Return the existing estado, disallowing changes
-        return self.cleaned_data['estado']  # For new proposals, allow state to be set
+    def __init__(self, *args, **kwargs):
+        """Inicializa o formulário e define a etiqueta vazia para o cliente."""
+        super().__init__(*args, **kwargs)
+        self.fields['cliente'].empty_label = "Selecione um cliente"  # Define o rótulo vazio
+        self.fields['estado_trabalho'].initial = 'standby'  # Define o estado inicial
