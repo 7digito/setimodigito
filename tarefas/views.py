@@ -1,14 +1,23 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt  # Temporariamente para teste
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from .models import Tarefa
 from .forms import TarefaForm
 import json
 
 def listar_tarefas(request):
+    search_query = request.GET.get('search', '')
     tarefas = Tarefa.objects.all()
-    return render(request, 'tarefas/listar_tarefas.html', {'tarefas': tarefas})
+    
+    if search_query:
+        tarefas = tarefas.filter(descricao__icontains=search_query)
+
+    return render(request, 'tarefas/listar_tarefas.html', {
+        'tarefas': tarefas,
+        'search_query': search_query
+    })
+
 
 def tarefas_home(request):
     tarefas_a_fazer = Tarefa.objects.filter(estado='a_fazer')
