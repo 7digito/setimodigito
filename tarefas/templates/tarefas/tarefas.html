@@ -12,6 +12,7 @@
         <!-- Coluna A Fazer -->
         <div class="kanban-column" id="a-fazer" data-status="a_fazer" style="background-color: #d4edda; padding: 10px;">
             <h2>A Fazer</h2>
+            <hr>
             {% for tarefa in tarefas_a_fazer %}
                 <div class="kanban-item" data-id="{{ tarefa.id }}" draggable="true">
                     <h6 class="text-muted">{{ tarefa.cliente }}</h6>
@@ -38,6 +39,7 @@
         <!-- Coluna Em Progresso -->
         <div class="kanban-column" id="em-progresso" data-status="em_progresso" style="background-color: #ffecb5; padding: 10px;">
             <h2>Em Progresso</h2>
+            <hr>
             {% for tarefa in tarefas_em_progresso %}
                 <div class="kanban-item" data-id="{{ tarefa.id }}" draggable="true">
                     <h6 class="text-muted">{{ tarefa.cliente }}</h6>
@@ -67,6 +69,7 @@
     <!-- Coluna Concluídas -->
     <div class="kanban-column" id="concluidas" data-status="concluido" style="width: 25%; background-color: #cce5ff; padding: 10px; margin-left: 10px;">
         <h2>Concluídas</h2>
+        <hr>
         {% for tarefa in tarefas_concluidas %}
             <div class="kanban-item" data-id="{{ tarefa.id }}" draggable="true">
                 <h6 class="text-muted">{{ tarefa.cliente }}</h6>
