@@ -39,7 +39,7 @@
             <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Título</th>
             <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Prioridade</th>
             <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Estado</th>
-            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Prazo</th>
+            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Data Limite</th>
             <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Ações</th>
             <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Detalhes</th>
         </tr>
@@ -59,14 +59,14 @@
                 </span>
             </td>
             <td style="padding-top: 10px; vertical-align: middle;">
-                <span class="badge {% if trabalho.estado == 'standby' %}bg-warning text-dark
-                                    {% elif trabalho.estado == 'initiated' %}bg-info text-dark
-                                    {% elif trabalho.estado == 'completed' %}bg-success
+                <span class="badge {% if trabalho.estado_trabalho == 'standby' %}bg-warning text-dark
+                                    {% elif trabalho.estado_trabalho == 'iniciado' %}bg-info text-dark
+                                    {% elif trabalho.estado_trabalho == 'concluido' %}bg-success
                                     {% else %}bg-secondary{% endif %}">
-                    {{ trabalho.get_estado_display }}
+                    {{ trabalho.get_estado_trabalho_display }}
                 </span>
             </td>
-            <td style="padding-top: 10px; vertical-align: middle;">{{ trabalho.prazo }}</td>
+            <td style="padding-top: 10px; vertical-align: middle;">{{ trabalho.data_limite }}</td>
             <td style="padding-top: 10px; vertical-align: middle;">
                 <a href="{% url 'trabalhos:trabalho_update' trabalho.id %}" class="btn btn-sm btn-primary" title="Editar">
                     <i class="bi bi-pencil" style="color: #ffffff;"></i>
@@ -90,54 +90,6 @@
         {% endfor %}
     </tbody>
 </table>
-
-<!-- Navegação da paginação -->
-<div class="d-flex justify-content-center mb-4">
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page=1&search={{ search_query }}" aria-label="Primeira" style="color: #ff6d00;">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}"
-                   aria-label="Anterior" style="color: #ff6d00;">
-                    <span aria-hidden="true">&#8249;</span>
-                </a>
-            </li>
-            {% endif %}
-
-            {% for num in page_obj.paginator.page_range %}
-            {% if num == page_obj.number %}
-            <li class="page-item active" aria-current="page">
-                <span class="page-link" style="background-color: #ff6d00; color: white;">{{ num }}</span>
-            </li>
-            {% else %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ num }}&search={{ search_query }}" style="color: #ff6d00;">{{ num }}</a>
-            </li>
-            {% endif %}
-            {% endfor %}
-
-            {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}"
-                   aria-label="Próxima" style="color: #ff6d00;">
-                    <span aria-hidden="true">&#8250;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&search={{ search_query }}"
-                   aria-label="Última" style="color: #ff6d00;">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            {% endif %}
-        </ul>
-    </nav>
-</div>
 
 <!-- Modal de confirmação de eliminação -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">

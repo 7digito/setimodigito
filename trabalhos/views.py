@@ -28,30 +28,27 @@ def trabalho_create(request):
         form = TrabalhoForm()  # Cria um formulário vazio
     return render(request, 'trabalhos/trabalho_form.html', {'form': form})
 
-# View para atualizar um trabalho existente
+# View para editar um trabalho existente
 def trabalho_update(request, pk):
-    """
-    Renderiza o formulário de atualização para um trabalho existente.
-    Se a requisição for POST e o formulário for válido, atualiza o trabalho e redireciona para a lista de trabalhos.
-    """
-    trabalho = get_object_or_404(Trabalho, pk=pk)  # Obtém o trabalho a ser atualizado
+    """Renderiza o formulário para edição de um trabalho existente."""
+    trabalho = get_object_or_404(Trabalho, id=pk)  # Obtém o trabalho que será editado
     if request.method == 'POST':
-        form = TrabalhoForm(request.POST, request.FILES, instance=trabalho)  # Preenche o formulário com os dados existentes
+        form = TrabalhoForm(request.POST, request.FILES, instance=trabalho)  # Cria o formulário com os dados do POST
         if form.is_valid():
-            form.save()  # Salva as alterações
-            return redirect('trabalhos:trabalhos_list')  # Redireciona para a lista de trabalhos
+            form.save()  # Salva as alterações no trabalho
+            return redirect('trabalhos:trabalho_detail', pk=trabalho.pk)  # Redireciona para os detalhes do trabalho
+        else:
+            print(form.errors)  # Mostra os erros de validação no console para debug
     else:
-        form = TrabalhoForm(instance=trabalho)  # Cria o formulário com dados do trabalho
-    return render(request, 'trabalhos/trabalho_form.html', {'form': form})
+        form = TrabalhoForm(instance=trabalho)  # Cria o formulário preenchido com os dados do trabalho
+    return render(request, 'trabalhos/trabalho_form.html', {'form': form, 'trabalho': trabalho})
 
-# View para excluir um trabalho
+# View para excluir um trabalho existente
 def trabalho_delete(request, pk):
-    """
-    Renderiza uma confirmação para exclusão de um trabalho.
-    Se a requisição for POST, exclui o trabalho e redireciona para a lista de trabalhos.
-    """
-    trabalho = get_object_or_404(Trabalho, pk=pk)  # Obtém o trabalho a ser excluído
+    """Exclui um trabalho existente e redireciona para a lista de trabalhos."""
+    trabalho = get_object_or_404(Trabalho, id=pk)  # Obtém o trabalho que será excluído
     if request.method == 'POST':
         trabalho.delete()  # Exclui o trabalho
         return redirect('trabalhos:trabalhos_list')  # Redireciona para a lista de trabalhos
     return render(request, 'trabalhos/trabalho_confirm_delete.html', {'trabalho': trabalho})
+

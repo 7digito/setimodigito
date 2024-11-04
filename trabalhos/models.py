@@ -1,24 +1,21 @@
 from django.db import models
 from django.utils import timezone
 from datetime import timedelta
-from clientes.models import Cliente  # Importa o modelo Cliente
+from clientes.models import Cliente
 
 class Trabalho(models.Model):
-    # Definição das opções para o tipo de trabalho
     TIPOS_DE_TRABALHO = [
         ('web', 'Web'),
         ('design', 'Design'),
         ('consultoria', 'Consultoria'),
     ]
     
-    # Definição das opções para prioridade
     PRIORIDADES = [
         ('baixa', 'Baixa'),
         ('media', 'Média'),
         ('alta', 'Alta'),
     ]
     
-    # Definição das opções para estado de trabalho
     ESTADOS_DE_TRABALHO = [
         ('standby', 'Standby'),
         ('iniciado', 'Iniciado'),
@@ -33,7 +30,7 @@ class Trabalho(models.Model):
     tipo_trabalho = models.CharField(max_length=20, choices=TIPOS_DE_TRABALHO)
     prioridade = models.CharField(max_length=10, choices=PRIORIDADES, blank=True, null=True)
     estado_trabalho = models.CharField(max_length=20, choices=ESTADOS_DE_TRABALHO, default='standby')
-    teve_proposta = models.BooleanField(default=False, blank=True, null=True)
+    teve_proposta = models.BooleanField(default=False)
     numero_proposta = models.CharField(max_length=20, blank=True, null=True)
     pdf_proposta = models.FileField(upload_to='trabalhos_pdfs/', blank=True, null=True)
 
@@ -41,17 +38,25 @@ class Trabalho(models.Model):
     validade_em_dias = models.PositiveIntegerField(default=30)  # Prazo de validade padrão
     data_expiracao = models.DateField(null=True, blank=True)
 
+    @property
+    def data_limite(self):
+        """Calcula a data limite com base na data de início e no prazo."""
+        if self.data_inicio and self.prazo:
+            return self.data_inicio + timedelta(days=self.prazo)
+        return None
+
     def save(self, *args, **kwargs):
-        """
-        Sobrescreve o método save para atualizar a data de entrega e 
-        calcular a data de expiração quando o estado é 'concluido'.
-        """
-        if self.estado_trabalho == 'concluido' and not self.data_entrega:
-            self.data_entrega = timezone.now().date()
-            if self.prazo:  # Verifique se prazo não é None
-                self.data_expiracao = self.data_entrega + timedelta(days=self.prazo)  # Usar o novo campo prazo
+        """Salva o trabalho e atualiza a data de entrega e data de expiração, se necessário."""
+        if self.estado_trabalho == 'concluido':
+            if not self.data_entrega:
+                self.data_entrega = timezone.now().date()
+            if self.prazo:  # Verifica se o prazo não é None
+                self.data_expiracao = self.data_entrega + timedelta(days=self.validade_em_dias)  # Usar validade em dias
+        else:
+            self.data_entrega = None  # Reseta data de entrega se não está concluído
+            self.data_expiracao = None  # Reseta data de expiração se não está concluído
+
         super().save(*args, **kwargs)
 
     def __str__(self):
-        """Retorna uma representação em string do objeto Trabalho."""
-        return f"{self.titulo} - {self.cliente.nome}"
+        return f"{self.titulo} - {self.cliente.nome if self.cliente else 'Cliente Desconhecido'}"
