@@ -3,7 +3,6 @@ from django.utils import timezone
 from datetime import timedelta
 from .models import Dominio, Cliente
 from .forms import DominioForm
-from django.core.paginator import Paginator
 
 # Lista de Domínios
 def listar_dominios(request):
@@ -14,14 +13,9 @@ def listar_dominios(request):
     else:
         # Obtém todos os domínios se não houver consulta
         dominios = Dominio.objects.all().order_by('nome')
-    
-    # Implementando paginação
-    paginator = Paginator(dominios, 10)  # 10 domínios por página
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
 
     return render(request, 'dominios/listar.html', {
-        'page_obj': page_obj,
+        'dominios': dominios,  # Passa todos os domínios para o template
         'search_query': query  # Passa a consulta de pesquisa para o template
     })
 

@@ -16,20 +16,16 @@
     </a>
 
     <!-- Formulário de pesquisa -->
-    <form action="{% url 'listar_dominios' %}" method="get" class="form-inline">
+    <form action="{% url 'listar_dominios' %}" method="get" class="form-inline" id="searchForm">
         <div class="input-group">
             <!-- Campo de entrada para pesquisa -->
             <input type="text" name="search" id="domainSearch" class="form-control" style="width: 300px;"
-                   placeholder="Pesquisar..." value="{{ search_query }}">
+                   placeholder="Pesquisar..." value="{{ search_query }}" oninput="performSearch()">
 
-            <!-- Botão para limpar ou pesquisar -->
-            <button class="btn" type="button" id="searchButton" style="background-color: #ff6d00; color: white;"
+            <!-- Botão para limpar pesquisa -->
+            <button class="btn" type="button" id="clearButton" style="background-color: #ff6d00; color: white;"
                     onclick="clearSearch()">
-                {% if search_query %}
-                    Limpar
-                {% else %}
-                    Pesquisar
-                {% endif %}
+                Limpar
             </button>
         </div>
     </form>
@@ -50,7 +46,7 @@
 </style>
 
 <!-- Tabela de domínios -->
-<table class="table table-striped">
+<table class="table table-striped" id="domainTable">
     <thead>
         <tr>
             <th>Nome</th>
@@ -63,7 +59,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for dominio in page_obj %}
+        {% for dominio in dominios %}
         <tr>
             <td>{{ dominio.nome }}</td>
             <td>{{ dominio.extensao }}</td>
@@ -96,55 +92,6 @@
     </tbody>
 </table>
 
-<!-- Navegação da paginação -->
-<div class="d-flex justify-content-center mb-4">
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page=1&search={{ search_query }}" aria-label="Primeira"
-                   style="color: #ff6d00;">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}"
-                   aria-label="Anterior" style="color: #ff6d00;">
-                    <span aria-hidden="true">&#8249;</span>
-                </a>
-            </li>
-            {% endif %}
-
-            {% for num in page_obj.paginator.page_range %}
-            {% if num == page_obj.number %}
-            <li class="page-item active" aria-current="page">
-                <span class="page-link" style="background-color: #ff6d00; color: white;">{{ num }}</span>
-            </li>
-            {% else %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ num }}&search={{ search_query }}" style="color: #ff6d00;">{{ num }}</a>
-            </li>
-            {% endif %}
-            {% endfor %}
-
-            {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search_query }}"
-                   aria-label="Próxima" style="color: #ff6d00;">
-                    <span aria-hidden="true">&#8250;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&search={{ search_query }}"
-                   aria-label="Última" style="color: #ff6d00;">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            {% endif %}
-        </ul>
-    </nav>
-</div>
-
 <!-- Modal de confirmação de eliminação -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -173,7 +120,7 @@
     function clearSearch() {
         var searchField = document.getElementById('domainSearch');
         searchField.value = ''; // Limpa o campo de pesquisa
-        searchField.form.submit(); // Envia o formulário
+        performSearch(); // Realiza a pesquisa
     }
 
     // Função para configurar os dados do domínio a ser eliminado no modal
@@ -181,6 +128,18 @@
         document.getElementById('dominioNome').textContent = nome; // Atualiza o nome do domínio no modal
         document.getElementById('dominio_id').value = id; // Atualiza o id correto
         document.getElementById('deleteForm').action = `{% url 'excluir_dominio' 0 %}`.replace('0', id); // Define a ação do formulário
+    }
+
+    // Função para realizar a busca dinâmica
+    function performSearch() {
+        const searchValue = document.getElementById('domainSearch').value.toLowerCase();
+        const tableRows = document.querySelectorAll('#domainTable tbody tr');
+
+        tableRows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            const rowText = Array.from(cells).map(cell => cell.textContent.toLowerCase()).join(' ');
+            row.style.display = rowText.includes(searchValue) ? '' : 'none'; // Mostra ou oculta a linha
+        });
     }
 </script>
 
