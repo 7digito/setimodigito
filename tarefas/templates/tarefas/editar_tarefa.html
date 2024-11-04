@@ -8,18 +8,23 @@
 
 <form method="post" class="form">
     {% csrf_token %}
+    
+    <!-- Campo para selecionar o Trabalho -->
     <div class="mb-3">
-        <label for="id_cliente" class="form-label">Cliente</label>
-        {{ form.cliente }}
+        <label for="id_trabalho" class="form-label">Trabalho</label>
+        {{ form.trabalho }}
     </div>
+    
     <div class="mb-3">
         <label for="id_descricao" class="form-label">Descrição</label>
         {{ form.descricao }}
     </div>
+    
     <div class="mb-3">
         <label for="id_estado" class="form-label">Estado</label>
         {{ form.estado }}
     </div>
+    
     <div class="mb-3">
         <label for="id_prioridade" class="form-label">Prioridade</label>
         {{ form.prioridade }}

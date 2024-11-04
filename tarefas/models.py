@@ -1,5 +1,5 @@
 from django.db import models
-from clientes.models import Cliente  # Importar o modelo Cliente
+from trabalhos.models import Trabalho  # Importar o modelo Trabalho
 
 class Tarefa(models.Model):
     ESTADOS_TAREFA = [
@@ -13,7 +13,7 @@ class Tarefa(models.Model):
         ('alta', 'Alta'),
     ]
 
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    trabalho = models.ForeignKey(Trabalho, on_delete=models.CASCADE, related_name="tarefas")
     descricao = models.TextField()
     estado = models.CharField(max_length=20, choices=ESTADOS_TAREFA, default='a_fazer')
     prioridade = models.CharField(max_length=10, choices=PRIORIDADES, default='media')

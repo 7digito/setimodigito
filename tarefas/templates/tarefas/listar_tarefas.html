@@ -20,61 +20,83 @@
                    placeholder="Pesquisar..." value="{{ search_query }}">
 
             <button class="btn" type="submit" style="background-color: #ff6d00; color: white;">
-                {% if search_query %}
-                    Limpar
-                {% else %}
-                    Pesquisar
-                {% endif %}
+                {% if search_query %} Limpar {% else %} Pesquisar {% endif %}
             </button>
         </div>
     </form>
 </div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Cliente</th>
-            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Descrição</th>
-            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Estado</th>
-            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Prioridade</th>
-            <th style="color: #ff6d00; border-bottom: 2px solid #ff6d00;">Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for tarefa in tarefas %}
-        <tr style="border-bottom: 1px solid #ff6d00;">
-            <td style="padding-top: 10px; vertical-align: middle;">{{ tarefa.cliente.nome }}</td>
-            <td style="padding-top: 10px; vertical-align: middle;">{{ tarefa.descricao }}</td>
-            <td style="padding-top: 10px; vertical-align: middle;">{{ tarefa.get_estado_display }}</td>
-            <td style="padding-top: 10px; vertical-align: middle;">
-                {% if tarefa.prioridade == 'alta' %}
-                    <span class="badge bg-danger">Alta</span>
-                {% elif tarefa.prioridade == 'media' %}
-                    <span class="badge bg-warning text-dark">Média</span>
-                {% elif tarefa.prioridade == 'baixa' %}
-                    <span class="badge bg-success">Baixa</span>
-                {% else %}
-                    <span class="badge bg-secondary">Indefinida</span>
-                {% endif %}
-            </td>
-            <td style="padding-top: 10px; vertical-align: middle;">
-                <a href="{% url 'editar_tarefa' tarefa.id %}" class="btn btn-sm btn-primary" title="Editar">
-                    <i class="bi bi-pencil" style="color: #ffffff;"></i>
-                </a>
-                <a href="#" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                   data-nome="{{ tarefa.descricao }}" data-id="{{ tarefa.id }}"
-                   onclick="setDeleteData('{{ tarefa.descricao }}', '{{ tarefa.id }}')" title="Eliminar">
-                    <i class="bi bi-trash" style="color: #ffffff;"></i>
-                </a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="5">Nenhuma tarefa encontrada.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="accordion" id="accordionExample">
+    {% for trabalho, tarefas in tarefas_por_trabalho.items %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="true"
+                        aria-controls="collapse{{ forloop.counter }}" style="background-color: #ffcc80; font-weight: bold;">
+                    {{ trabalho.nome }} - {{ tarefas.0.trabalho.cliente.nome }}
+                </button>
+            </h2>
+            <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse"
+                 aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="color: #ff6d00;">Descrição</th>
+                                <th style="color: #ff6d00;">Estado</th>
+                                <th style="color: #ff6d00;">Prioridade</th>
+                                <th style="color: #ff6d00;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tarefa in tarefas %}
+                                <tr>
+                                    <td>{{ tarefa.descricao }}</td>
+                                    <td>
+                                        {% if tarefa.estado == 'a_fazer' %}
+                                            <span class="badge bg-secondary">A Fazer</span>
+                                        {% elif tarefa.estado == 'em_progresso' %}
+                                            <span class="badge bg-info text-dark">Em Progresso</span>
+                                        {% elif tarefa.estado == 'concluido' %}
+                                            <span class="badge bg-success">Concluída</span>
+                                        {% else %}
+                                            <span class="badge bg-dark">Indefinido</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if tarefa.prioridade == 'alta' %}
+                                            <span class="badge bg-danger">Alta</span>
+                                        {% elif tarefa.prioridade == 'media' %}
+                                            <span class="badge bg-warning text-dark">Média</span>
+                                        {% elif tarefa.prioridade == 'baixa' %}
+                                            <span class="badge bg-success">Baixa</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Indefinida</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'editar_tarefa' tarefa.id %}" class="btn btn-sm btn-primary" title="Editar">
+                                            <i class="bi bi-pencil" style="color: #ffffff;"></i>
+                                        </a>
+                                        <a href="#" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                           data-nome="{{ tarefa.descricao }}" data-id="{{ tarefa.id }}"
+                                           onclick="setDeleteData('{{ tarefa.descricao }}', '{{ tarefa.id }}')" title="Eliminar">
+                                            <i class="bi bi-trash" style="color: #ffffff;"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4">Nenhuma tarefa encontrada.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
 
 <!-- Modal de confirmação de eliminação -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -89,27 +111,16 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <form id="deleteForm" method="post" action="{% url 'apagar_tarefa' 0 %}" style="display: inline;">
-                    {% csrf_token %}
-                    <input type="hidden" name="tarefa_id" id="tarefa_id">
-                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                </form>
+                <a id="confirmDeleteButton" href="#" class="btn btn-danger">Eliminar</a>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    function clearSearch() {
-        var searchField = document.getElementById('taskSearch');
-        searchField.value = '';
-        searchField.form.submit();
-    }
-
     function setDeleteData(nome, id) {
         document.getElementById('tarefaNome').textContent = nome;
-        document.getElementById('tarefa_id').value = id;
-        document.getElementById('deleteForm').action = `{% url 'apagar_tarefa' 0 %}`.replace('0', id);
+        document.getElementById('confirmDeleteButton').href = "/tarefas/apagar/" + id + "/";
     }
 </script>
 
